@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Category accent colors — keep in sync with src/lib/constants.ts */
+:root {
+  --color-health: #ec4899;
+  --color-housing: #f59e0b;
+  --color-education: #3b82f6;
+  --color-civic: #6366f1;
+  --color-safety: #1e3a8a;
+
+  --gradient-mint: #d9f5e8;
+  --gradient-cream: #fdf6e8;
+  --gradient-blush: #fbe4e8;
+}
