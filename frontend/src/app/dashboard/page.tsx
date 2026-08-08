@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import StatsBand from "@/components/dashboard/StatsBand";
 import CategoryDonutChart from "@/components/dashboard/CategoryDonutChart";
 import ResolutionRateChart from "@/components/dashboard/ResolutionRateChart";
+import { GrievanceReport, getDatabaseReports } from "@/lib/reports";
 import {
   ShieldAlert,
   Lock,
@@ -13,7 +14,10 @@ import {
   RefreshCw,
   ArrowLeft,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  ChevronRight,
+  ExternalLink,
+  Inbox
 } from "lucide-react";
 import Link from "next/link";
 
@@ -21,10 +25,22 @@ export default function DashboardPage() {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [timeframe, setTimeframe] = useState<string>("30d");
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  
+  // Helper for formatted today string (YYYY-MM-DD)
+  const getTodayStr = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayStr = getTodayStr();
   const [startDate, setStartDate] = useState<string>("2026-08-01");
-  const [endDate, setEndDate] = useState<string>("2026-08-08");
+  const [endDate, setEndDate] = useState<string>(todayStr);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [dbReports, setDbReports] = useState<GrievanceReport[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -33,6 +49,8 @@ export default function DashboardPage() {
     if (savedAdmin === "true") {
       setIsAdmin(true);
     }
+    // Load database reports (no fake random data generated)
+    setDbReports(getDatabaseReports());
   }, []);
 
   const handleAdminToggle = (status: boolean) => {
@@ -49,7 +67,6 @@ export default function DashboardPage() {
     setTimeframe(tf);
     setShowDatePicker(false);
     const today = new Date();
-    const todayStr = today.toISOString().split("T")[0];
 
     let days = 30;
     if (tf === "7d") days = 7;
@@ -65,6 +82,7 @@ export default function DashboardPage() {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    setDbReports(getDatabaseReports());
     setTimeout(() => {
       setIsRefreshing(false);
     }, 800);
@@ -136,6 +154,9 @@ export default function DashboardPage() {
     );
   }
 
+  // Filter urgent/high priority database items
+  const urgentPriorityItems = dbReports.filter((r) => r.priority === "Urgent" || r.priority === "High");
+
   // -------------------------------------------------------------
   // ADMIN DASHBOARD VIEW
   // -------------------------------------------------------------
@@ -153,7 +174,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-2.5 mb-1">
                 <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-                  Municipal Analytics Dashboard
+                  Dashboard
                 </h1>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200/80">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -203,7 +224,7 @@ export default function DashboardPage() {
                     <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
                       <span className="font-extrabold text-xs text-slate-900 flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-indigo-600" />
-                        Custom Date Range
+                        Custom Date Range (Past & Present Only)
                       </span>
                       <button
                         onClick={() => setShowDatePicker(false)}
@@ -216,32 +237,49 @@ export default function DashboardPage() {
                     <div className="space-y-3">
                       <div>
                         <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                          Start Date
+                          Start Date (Past / Present)
                         </label>
                         <input
                           type="date"
                           value={startDate}
+                          max={todayStr}
                           onChange={(e) => {
-                            setStartDate(e.target.value);
+                            const val = e.target.value;
+                            if (val > todayStr) {
+                              setStartDate(todayStr);
+                            } else {
+                              setStartDate(val);
+                            }
                             setTimeframe("custom");
                           }}
-                          className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                         />
                       </div>
 
                       <div>
                         <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                          End Date
+                          End Date (Past / Present)
                         </label>
                         <input
                           type="date"
                           value={endDate}
+                          min={startDate}
+                          max={todayStr}
                           onChange={(e) => {
-                            setEndDate(e.target.value);
+                            const val = e.target.value;
+                            if (val > todayStr) {
+                              setEndDate(todayStr);
+                            } else {
+                              setEndDate(val);
+                            }
                             setTimeframe("custom");
                           }}
-                          className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                         />
+                      </div>
+
+                      <div className="text-[10px] text-slate-500 font-medium bg-indigo-50/50 p-2 rounded-lg border border-indigo-100">
+                        Future dates disabled. You can only query past and present records up to today ({todayStr}).
                       </div>
 
                       <button
@@ -303,98 +341,101 @@ export default function DashboardPage() {
         </section>
 
         {/* Admin Action Queue / Recent High Priority Escalations */}
-        <section className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
+        <section className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs group hover:border-indigo-300 transition-all">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-3 border-b border-slate-100">
             <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
-                <span>Urgent Action Queue (Admin Priority)</span>
-              </h3>
-              <p className="text-xs text-slate-500">
-                Grievances requiring immediate officer reassignment or status escalation
+              <Link href="/admin/priority" className="inline-flex items-center gap-2 group-hover:text-indigo-600 transition-colors">
+                <AlertTriangle className="w-5 h-5 text-amber-500" />
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight group-hover:text-indigo-600">
+                  Urgent Action Queue (Admin Priority)
+                </h3>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Click section or button below to view the dedicated priority management page.
               </p>
             </div>
-            <span className="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full border border-amber-200/80">
-              3 Pending Action
-            </span>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full border border-amber-200/80">
+                {urgentPriorityItems.length} Urgent in DB
+              </span>
+
+              <Link
+                href="/admin/priority"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl transition-all shadow-xs"
+              >
+                <span>Open Priority Page</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 uppercase tracking-wider">
-                <tr>
-                  <th className="p-3 font-bold rounded-l-xl">Report ID</th>
-                  <th className="p-3 font-bold">Category</th>
-                  <th className="p-3 font-bold">Description</th>
-                  <th className="p-3 font-bold">Location</th>
-                  <th className="p-3 font-bold">Status</th>
-                  <th className="p-3 font-bold rounded-r-xl text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                <tr className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-3 font-mono font-bold text-indigo-600">#GRV-8942</td>
-                  <td className="p-3">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                      Civic Issue
-                    </span>
-                  </td>
-                  <td className="p-3 max-w-xs truncate font-medium">Main water pipeline burst near Sector 4 market.</td>
-                  <td className="p-3 font-medium">Sector 4, North Zone</td>
-                  <td className="p-3">
-                    <span className="inline-flex items-center gap-1 text-amber-700 font-bold">
-                      <Clock className="w-3.5 h-3.5" /> In Progress
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <button className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg border border-indigo-200/60 transition-all">
-                      Assign Officer
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-3 font-mono font-bold text-indigo-600">#GRV-8939</td>
-                  <td className="p-3">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-100">
-                      Safety
-                    </span>
-                  </td>
-                  <td className="p-3 max-w-xs truncate font-medium">Streetlight grid failure causing dark alleyway hazard.</td>
-                  <td className="p-3 font-medium">Bus Terminal Road</td>
-                  <td className="p-3">
-                    <span className="inline-flex items-center gap-1 text-rose-700 font-bold">
-                      <AlertTriangle className="w-3.5 h-3.5" /> Unassigned
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <button className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg shadow-xs transition-all">
-                      Dispatch Team
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-3 font-mono font-bold text-indigo-600">#GRV-8921</td>
-                  <td className="p-3">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-100">
-                      Corruption
-                    </span>
-                  </td>
-                  <td className="p-3 max-w-xs truncate font-medium">Unauthorized fee demand reported at birth certificate counter.</td>
-                  <td className="p-3 font-medium">Civic Center Office</td>
-                  <td className="p-3">
-                    <span className="inline-flex items-center gap-1 text-blue-700 font-bold">
-                      <Clock className="w-3.5 h-3.5" /> Under Review
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <button className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg border border-indigo-200/60 transition-all">
-                      Escalate Vigilance
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          {/* Database Driven Table (Strictly NO random data) */}
+          {urgentPriorityItems.length === 0 ? (
+            <div className="p-8 text-center bg-slate-50/60 rounded-xl border border-dashed border-slate-200 space-y-3">
+              <div className="mx-auto w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center border border-slate-200">
+                <Inbox className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-slate-800">
+                  No Urgent Priority Records Found in Database
+                </p>
+                <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
+                  Only real records from your database or user submissions are rendered. No random/mock entries exist.
+                </p>
+              </div>
+              <Link
+                href="/admin/priority"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs"
+              >
+                <span>Go to Priority Queue Management</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-600 uppercase tracking-wider font-extrabold">
+                  <tr>
+                    <th className="p-3 rounded-l-xl">Report ID</th>
+                    <th className="p-3">Category</th>
+                    <th className="p-3">Description</th>
+                    <th className="p-3">Location</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 rounded-r-xl text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {urgentPriorityItems.slice(0, 5).map((item) => (
+                    <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-3 font-mono font-bold text-indigo-600">{item.id}</td>
+                      <td className="p-3">
+                        <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                          {item.category}
+                        </span>
+                      </td>
+                      <td className="p-3 max-w-xs truncate font-medium">{item.description}</td>
+                      <td className="p-3 font-medium">{item.location}</td>
+                      <td className="p-3">
+                        <span className="inline-flex items-center gap-1 text-amber-700 font-bold">
+                          <Clock className="w-3.5 h-3.5" /> {item.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right">
+                        <Link
+                          href="/admin/priority"
+                          className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg border border-indigo-200/60 transition-all inline-block"
+                        >
+                          Manage Priority
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </main>
     </div>

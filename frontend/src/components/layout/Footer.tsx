@@ -1,145 +1,367 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
-import { Send, ShieldAlert, Share2, Globe, Mail } from "lucide-react";
+import {
+  Globe,
+  ShieldAlert,
+  FileText,
+  Lock,
+  Smartphone,
+  Landmark,
+  CreditCard,
+  HeartPulse,
+  Sprout,
+  Users,
+  ExternalLink,
+  ChevronRight,
+  ShieldCheck,
+  Send,
+  Building2,
+  Share2
+} from "lucide-react";
 
 export default function Footer() {
+  // Scheme directory categories (No heavy boxes - clean text layout)
+  const schemeCategories = [
+    {
+      title: "Central Schemes",
+      links: [
+        { label: "Apply Now", href: "/match" },
+        { label: "Check Eligibility", href: "/match" },
+        { label: "Central Guidelines & FAQs", href: "#faq" },
+      ],
+    },
+    {
+      title: "State Welfare",
+      links: [
+        { label: "State Portals", href: "/match" },
+        { label: "Eligibility Checker", href: "/match" },
+        { label: "State Nodal Officers", href: "/report" },
+      ],
+    },
+    {
+      title: "District & Local",
+      links: [
+        { label: "District Grievances", href: "/report" },
+        { label: "Track Local Status", href: "/track" },
+        { label: "Municipal Directory", href: "/dashboard" },
+      ],
+    },
+    {
+      title: "Women & Child",
+      links: [
+        { label: "Maternity Benefits", href: "/match" },
+        { label: "Girl Child Education", href: "/match" },
+        { label: "Self Help Groups", href: "/match" },
+      ],
+    },
+    {
+      title: "Farmers & Agriculture",
+      links: [
+        { label: "Crop Insurance & Subsidies", href: "/match" },
+        { label: "PM-Kisan Direct Credit", href: "/match" },
+        { label: "Soil & Water Grants", href: "/match" },
+      ],
+    },
+    {
+      title: "Youth & Students",
+      links: [
+        { label: "National Scholarships", href: "/match" },
+        { label: "Skill India Training", href: "/match" },
+        { label: "Apprenticeship Portal", href: "/match" },
+      ],
+    },
+    {
+      title: "Seniors & Pensioners",
+      links: [
+        { label: "Old Age Pension Scheme", href: "/match" },
+        { label: "Life Certificate (Jeevan Pramaan)", href: "/match" },
+        { label: "Senior Healthcare Benefits", href: "/match" },
+      ],
+    },
+    {
+      title: "PwD & Special Needs",
+      links: [
+        { label: "UDID Card Registration", href: "/match" },
+        { label: "Disability Pensions", href: "/match" },
+        { label: "Assistive Device Grants", href: "/match" },
+      ],
+    },
+    {
+      title: "Minorities & Welfare",
+      links: [
+        { label: "Pre & Post Matric Aid", href: "/match" },
+        { label: "Entrepreneurship Loans", href: "/match" },
+        { label: "Community Grants", href: "/match" },
+      ],
+    },
+    {
+      title: "BPL & Low Income",
+      links: [
+        { label: "Ration Card Renewal", href: "/match" },
+        { label: "PMAY Affordable Housing", href: "/match" },
+        { label: "Free Medical Coverage", href: "/match" },
+      ],
+    },
+    {
+      title: "Health & Medical",
+      links: [
+        { label: "Ayushman Card Download", href: "/match" },
+        { label: "Free Clinic Finder", href: "/match" },
+        { label: "Immunization Telemetry", href: "/match" },
+      ],
+    },
+    {
+      title: "Civic & Grievance",
+      links: [
+        { label: "Report Potholes & Roads", href: "/report" },
+        { label: "Sanitation & Waste Alert", href: "/report" },
+        { label: "Corruption Whistleblower", href: "/report" },
+      ],
+    },
+  ];
+
+  // Official Government Portals with real links and distinct icons
+  const govPortals = [
+    {
+      name: "India.gov.in",
+      desc: "National Portal of India",
+      url: "https://india.gov.in",
+      icon: Globe,
+      iconBg: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    },
+    {
+      name: "MyGov.in",
+      desc: "Citizen Engagement Platform",
+      url: "https://mygov.in",
+      icon: Users,
+      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    },
+    {
+      name: "DigiLocker",
+      desc: "Official Document Repository",
+      url: "https://digilocker.gov.in",
+      icon: Lock,
+      iconBg: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    },
+    {
+      name: "UIDAI Aadhaar",
+      desc: "Unique Identification Portal",
+      url: "https://uidai.gov.in",
+      icon: CreditCard,
+      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    },
+    {
+      name: "CPGRAMS",
+      desc: "Central Public Grievance Redressal",
+      url: "https://pgportal.gov.in",
+      icon: ShieldCheck,
+      iconBg: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    },
+    {
+      name: "DBT Bharat",
+      desc: "Direct Benefit Transfer Portal",
+      url: "https://dbtbharat.gov.in",
+      icon: Landmark,
+      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    },
+    {
+      name: "UMANG Portal",
+      desc: "Unified Mobile Governance App",
+      url: "https://umang.gov.in",
+      icon: Smartphone,
+      iconBg: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+    },
+    {
+      name: "National Cyber Crime",
+      desc: "Official Cyber Incident Helpline",
+      url: "https://cybercrime.gov.in",
+      icon: ShieldAlert,
+      iconBg: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+    },
+    {
+      name: "PM-Kisan Portal",
+      desc: "Farmer Financial Transfer System",
+      url: "https://pmkisan.gov.in",
+      icon: Sprout,
+      iconBg: "bg-green-500/10 text-green-400 border-green-500/20",
+    },
+    {
+      name: "NHA Ayushman",
+      desc: "National Health Authority",
+      url: "https://nha.gov.in",
+      icon: HeartPulse,
+      iconBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+    },
+  ];
+
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="w-full mt-auto bg-slate-950 text-slate-300 pt-12 pb-8 border-t border-slate-850">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
-          
-          {/* Brand Column (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow">
-                <svg className="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
-                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V7l-9-5zm0 4.2a2.3 2.3 0 110 4.6 2.3 2.3 0 010-4.6zm0 13.6c-2.43 0-4.66-.72-6.5-1.96.04-2.15 4.33-3.34 6.5-3.34s6.46 1.19 6.5 3.34c-1.84 1.24-4.07 1.96-6.5 1.96z"/>
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white tracking-tight leading-none">
-                  JanSuvidha
-                </span>
-                <span className="text-[11px] font-medium text-slate-400 mt-1">
-                  Aapka Haq, Aapki Saral
-                </span>
-              </div>
-            </Link>
-
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              Empowering citizens to access government benefits and services with transparency and ease.
-            </p>
-
-            {/* Social Icons */}
-            <div className="flex items-center gap-3 pt-2">
-              <a href="#" aria-label="Facebook" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-              </a>
-              <a href="#" aria-label="Twitter" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.936 9.936 0 0024 4.59z"/></svg>
-              </a>
-              <a href="#" aria-label="YouTube" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              </a>
-              <a href="#" aria-label="Instagram" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-pink-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-              </a>
+        {/* Top Header Row matching screenshot typography */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md">
+              <Building2 className="w-4.5 h-4.5" />
+            </div>
+            <div>
+              <h2 className="text-base font-extrabold text-white uppercase tracking-wider">
+                Extended Platform Sections
+              </h2>
+              <p className="text-[11px] text-slate-400">
+                Comprehensive directory of citizen welfare schemes, grievances & government services
+              </p>
             </div>
           </div>
 
-          {/* Platform Column (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              Platform
-            </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
-              <li>
-                <Link href="/match" className="hover:text-blue-400 transition-colors">
-                  Find Schemes
-                </Link>
-              </li>
-              <li>
-                <Link href="/report" className="hover:text-emerald-400 flex items-center gap-1.5 transition-colors text-emerald-400 font-medium">
-                  <ShieldAlert className="w-3.5 h-3.5" />
-                  <span>Grievance Redressal</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/track" className="hover:text-amber-400 transition-colors">
-                  Track Status
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="hover:text-indigo-400 transition-colors">
-                  Dashboard
-                </Link>
-              </li>
-            </ul>
+          <div className="flex items-center gap-4 text-xs font-semibold text-slate-400">
+            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <span>|</span>
+            <a href="#" className="hover:text-white transition-colors">Terms & Conditions</a>
+            <span>|</span>
+            <a href="#faq" className="hover:text-white transition-colors">Help Center</a>
+          </div>
+        </div>
+
+        {/* SECTION 1: Scheme Categories (No heavy boxes - clean typography grid layout) */}
+        <div>
+          <div className="mb-6 flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span>Scheme Categories & Services</span>
+            </h3>
+            <span className="text-xs text-slate-400 font-medium">
+              12 Primary Welfare Streams
+            </span>
           </div>
 
-          {/* Resources Column (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              Resources
-            </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
-              <li><a href="#faq" className="hover:text-blue-400 transition-colors">FAQs</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Guides</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Contact Us</a></li>
-            </ul>
+          {/* Clean grid without heavy rounded card boxes */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-8 pb-10 border-b border-slate-800">
+            {schemeCategories.map((cat, idx) => (
+              <div key={idx} className="space-y-2">
+                <h4 className="text-xs font-extrabold text-white tracking-wide border-b border-slate-800/80 pb-1.5 flex items-center justify-between">
+                  <span>{cat.title}</span>
+                </h4>
+                <ul className="space-y-1.5 text-xs text-slate-400 font-medium">
+                  {cat.links.map((link, linkIdx) => (
+                    <li key={linkIdx}>
+                      <Link
+                        href={link.href}
+                        className="hover:text-blue-400 transition-colors flex items-center gap-1 group"
+                      >
+                        <ChevronRight className="w-3 h-3 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+                        <span>{link.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* SECTION 2: Official Government Portals & Website Links (With Icons & No Boxes) */}
+        <div>
+          <div className="mb-6 flex items-center justify-between">
+            <div className="space-y-1">
+              <h3 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>Official Government Portals & Portals Directory</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                Direct external access to Indian Central & State Government administrative portals
+              </p>
+            </div>
+            <span className="hidden sm:inline-flex text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              Verified Gov Domains (.gov.in / .nic.in)
+            </span>
           </div>
 
-          {/* Government Links (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              Gov Portals
-            </h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-400">
-              <li><a href="https://india.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">India.gov.in</a></li>
-              <li><a href="https://mygov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">MyGov.in</a></li>
-              <li><a href="https://digilocker.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">DigiLocker</a></li>
-              <li><a href="https://uidai.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">UIDAI</a></li>
-            </ul>
+          {/* Clean icon list layout (No heavy card boxes) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 pb-10 border-b border-slate-800">
+            {govPortals.map((portal, pIdx) => {
+              const IconComponent = portal.icon;
+              return (
+                <a
+                  key={pIdx}
+                  href={portal.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-900 transition-all border border-transparent hover:border-slate-800"
+                >
+                  <div className={`p-2 rounded-xl border ${portal.iconBg} group-hover:scale-105 transition-transform shrink-0`}>
+                    <IconComponent className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                        {portal.name}
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-blue-400 transition-colors shrink-0" />
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                      {portal.desc}
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Stay Updated Column (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              Stay Updated
-            </h4>
-            <p className="text-xs text-slate-400">
-              Sign up for our newsletter and updates.
+        {/* Brand Summary & Newsletter Sub-Row */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+          <div className="md:col-span-6 space-y-3">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow">
+                <ShieldCheck className="w-4.5 h-4.5" />
+              </div>
+              <span className="text-lg font-extrabold text-white tracking-tight">
+                JanSuvidha Portal
+              </span>
+            </Link>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-md">
+              JanSuvidha is an open citizen platform connecting individuals with government welfare entitlement schemes and enabling direct civic grievance redressal with local municipal authorities.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-1.5">
+          </div>
+
+          <div className="md:col-span-6 space-y-3 flex flex-col justify-center">
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+              Subscribe for Scheme Notifications
+            </h4>
+            <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2 max-w-md">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-slate-500"
+                placeholder="Enter email for welfare alerts"
+                className="w-full px-3.5 py-2 text-xs bg-slate-900 border border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 text-white placeholder-slate-500"
               />
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors shrink-0"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 text-xs rounded-xl transition-all shrink-0 flex items-center gap-1.5"
               >
-                <Send className="w-3.5 h-3.5" />
+                <span>Subscribe</span>
+                <Send className="w-3 h-3" />
               </button>
             </form>
           </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        {/* Bottom Legal & Copyright Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <div>
-            © 2026 JanSuvidha. All rights reserved.
+            © 2026 JanSuvidha Portal. All rights reserved. Built for transparent civic access.
           </div>
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>
-            <span>|</span>
-            <a href="#" className="hover:text-slate-300 transition-colors">Terms & Conditions</a>
+
+          <div className="flex items-center gap-5 font-medium">
+            <a href="#" className="hover:text-slate-200 transition-colors">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" className="hover:text-slate-200 transition-colors">Terms of Service</a>
+            <span>•</span>
+            <a href="#" className="hover:text-slate-200 transition-colors">Accessibility</a>
+            <span>•</span>
+            <a href="#" className="hover:text-slate-200 transition-colors">Sitemap</a>
           </div>
         </div>
 

@@ -4,16 +4,16 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Welfare & Civic Platform",
+  title: "JanSuvidha | Welfare & Civic Platform",
   description: "Find the government schemes you're eligible for and report civic issues.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="h-full">
+      <body className="min-h-screen flex flex-col antialiased bg-slate-50 text-slate-900">
         <Header />
-        <main>{children}</main>
+        <main className="flex-1 w-full">{children}</main>
         <Footer />
       </body>
     </html>

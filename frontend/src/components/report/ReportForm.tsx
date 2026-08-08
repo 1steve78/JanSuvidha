@@ -6,6 +6,7 @@ import PhotoUpload from "./PhotoUpload";
 import GeotagMapPreview, { LocationData } from "./GeotagMapPreview";
 import ConfirmationScreen, { SubmittedReportData } from "./ConfirmationScreen";
 import { ShieldCheck, Send, AlertCircle, Info, Lock, Sparkles } from "lucide-react";
+import { saveDatabaseReport } from "@/lib/reports";
 
 export type ReportCategory = "Harassment" | "Corruption" | "Civic Issue" | "Safety";
 
@@ -97,8 +98,17 @@ export default function ReportForm() {
 
     setTimeout(() => {
       const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const randomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const mockTrackingId = `JSV-2026-${randomSuffix}-${randomCode}`;
+      const mockTrackingId = `JSV-2026-${randomSuffix}`;
+
+      saveDatabaseReport({
+        id: mockTrackingId,
+        category: selectedCategory!,
+        description: description.trim(),
+        location: location.address,
+        status: "Pending",
+        priority: selectedCategory === "Safety" || selectedCategory === "Corruption" ? "Urgent" : "High",
+        createdAt: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      });
 
       setSubmittedData({
         trackingId: mockTrackingId,
