@@ -5,7 +5,6 @@ import { Search, ChevronDown, HelpCircle } from "lucide-react";
 
 export default function FAQAccordion() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
     {
@@ -34,6 +33,8 @@ export default function FAQAccordion() {
     },
   ];
 
+  const [openId, setOpenId] = useState<string | null>(faqs[0].question);
+
   const filteredFaqs = faqs.filter(
     (faq) =>
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,7 +42,7 @@ export default function FAQAccordion() {
   );
 
   return (
-    <section className="py-16 bg-slate-50/60 border-t border-slate-200/60">
+    <section className="py-16 border-t border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title + Search Header */}
@@ -69,17 +70,17 @@ export default function FAQAccordion() {
           </div>
         </div>
 
-        {/* 2-Column Accordion Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredFaqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
+        {/* 2-Column Accordion Grid — items-start prevents adjacent cards stretching */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+          {filteredFaqs.map((faq) => {
+            const isOpen = openId === faq.question;
             return (
               <div
-                key={idx}
-                className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm transition-all"
+                key={faq.question}
+                className="w-full self-start bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm transition-shadow"
               >
                 <button
-                  onClick={() => setOpenIndex(isOpen ? null : idx)}
+                  onClick={() => setOpenId(isOpen ? null : faq.question)}
                   className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors"
                 >
                   <span className="text-sm sm:text-base font-semibold text-slate-900">

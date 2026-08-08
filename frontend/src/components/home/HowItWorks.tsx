@@ -1,81 +1,115 @@
 "use client";
 
-import { FileText, Cpu, CheckCircle } from "lucide-react";
+import { FileText, Cpu, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function HowItWorks() {
   const steps = [
     {
       number: "01",
       title: "Enter Details",
-      description: "Fill your household profile for scheme matching, or snap a geotagged photo of a civic issue.",
+      description: "Fill household profile or snap geotagged photo",
       icon: FileText,
-      color: "from-blue-500 to-indigo-600",
+      badge: "Step 1",
+      softIconBg: "bg-blue-50 text-blue-600 border-blue-100",
+      numberColor: "text-blue-600",
+      hoverBorder: "hover:border-blue-300 hover:shadow-blue-500/10",
     },
     {
       number: "02",
       title: "Get Matched",
-      description: "Our rule-based ML algorithm instantly calculates eligible schemes with clear eligibility reasoning.",
+      description: "AI/Rule engine calculates eligible schemes & reasoning",
       icon: Cpu,
-      color: "from-indigo-600 to-purple-600",
+      badge: "Step 2",
+      softIconBg: "bg-indigo-50 text-indigo-600 border-indigo-100",
+      numberColor: "text-indigo-600",
+      hoverBorder: "hover:border-indigo-300 hover:shadow-indigo-500/10",
     },
     {
       number: "03",
       title: "Apply & Track",
-      description: "Submit applications with 1-click or track your geotagged report until official resolution.",
-      icon: CheckCircle,
-      color: "from-emerald-500 to-teal-600",
+      description: "1-click submission with direct tracking ID",
+      icon: CheckCircle2,
+      badge: "Step 3",
+      softIconBg: "bg-emerald-50 text-emerald-600 border-emerald-100",
+      numberColor: "text-emerald-600",
+      hoverBorder: "hover:border-emerald-300 hover:shadow-emerald-500/10",
     },
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 relative overflow-hidden bg-slate-50/40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-            Simple 3-Step Process
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
-            How JanSuvidha Works
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          {/* Subtitle Pill */}
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-100/80 shadow-sm">
+            <span>SIMPLE 3-STEP PROCESS</span>
+          </div>
+
+          {/* Heading */}
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            Seamless Access to Civic Benefits
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base mt-2">
-            Seamlessly access government benefits or resolve civic grievances in three simple steps.
+
+          <p className="text-slate-600 text-sm sm:text-base font-normal">
+            How JanSuvidha unifies citizen empowerment and grievance resolution in three simple steps.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        {/* 3-Step Connected Cards Layout */}
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          
+          {/* Horizontal Dashed Connector Line (Visible on Desktop) */}
+          <div 
+            className="hidden md:block absolute top-[4.5rem] left-[15%] right-[15%] border-t-2 border-dashed border-slate-300 pointer-events-none z-0" 
+            aria-hidden="true"
+          />
+
           {steps.map((step, idx) => {
             const Icon = step.icon;
             return (
               <div
                 key={step.number}
-                className="relative bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 hover:shadow-md transition-shadow group flex flex-col items-start"
+                className={`relative bg-white/95 backdrop-blur p-7 sm:p-8 rounded-3xl border border-slate-200/90 shadow-sm hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group z-10 ${step.hoverBorder}`}
               >
-                {/* Number Badge */}
-                <div className="flex items-center justify-between w-full mb-6">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${step.color} text-white flex items-center justify-center font-bold shadow-md`}>
-                    <Icon className="w-6 h-6" />
+                <div>
+                  {/* Top Bar: Soft Icon Container + Large Step Number */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className={`p-3.5 rounded-2xl border ${step.softIconBg} group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+
+                    {/* Large Step Number in bold vibrant accent blue/indigo */}
+                    <span className={`text-4xl sm:text-5xl font-black ${step.numberColor} tracking-tighter opacity-90 group-hover:opacity-100 transition-opacity`}>
+                      {step.number}
+                    </span>
                   </div>
-                  <span className="text-3xl font-black text-slate-300 group-hover:text-blue-500 transition-colors">
-                    {step.number}
-                  </span>
+
+                  {/* Title & Description */}
+                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors duration-200">
+                    {step.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-600 font-normal mt-2.5 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  {step.description}
-                </p>
-
-                {/* Arrow connector between steps on medium screens */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 z-10 text-slate-300">
-                    <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
-                      <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                    </svg>
-                  </div>
-                )}
+                {/* Card Footer */}
+                <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-400">
+                  <span className="uppercase tracking-wider font-mono text-[11px] text-slate-500">
+                    {step.badge}
+                  </span>
+                  {idx < steps.length - 1 ? (
+                    <span className="hidden md:flex items-center gap-1 text-slate-400 font-normal">
+                      Next step
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  ) : (
+                    <span className="text-emerald-600 font-medium">Ready to start</span>
+                  )}
+                </div>
               </div>
             );
           })}

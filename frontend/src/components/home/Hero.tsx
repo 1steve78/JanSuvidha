@@ -6,7 +6,7 @@ import { Search, ShieldAlert, Sparkles, CheckCircle2 } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/60 via-indigo-50/30 to-white pt-8 pb-16 lg:py-20">
+    <section className="relative overflow-hidden bg-transparent pt-8 pb-16 lg:py-20">
       {/* Decorative backdrop glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
       
@@ -17,7 +17,7 @@ export default function Hero() {
           <div className="lg:col-span-7 space-y-6 text-left">
             
             {/* Top pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 landing-shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
               <span>Unified Welfare & Grievance Redressal Platform</span>
             </div>
@@ -39,7 +39,7 @@ export default function Hero() {
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/match"
-                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 text-base group"
+                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl landing-shadow-md landing-shadow-md-hover transition-all flex items-center justify-center gap-2.5 text-base group"
               >
                 <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span>Find My Schemes</span>
@@ -47,7 +47,7 @@ export default function Hero() {
 
               <Link
                 href="/report"
-                className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-7 py-3.5 rounded-xl border border-slate-300 shadow-sm hover:border-slate-400 transition-all flex items-center justify-center gap-2.5 text-base"
+                className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-7 py-3.5 rounded-xl border border-slate-300 landing-shadow-sm landing-shadow-sm-hover hover:border-slate-400 transition-all flex items-center justify-center gap-2.5 text-base"
               >
                 <ShieldAlert className="w-5 h-5 text-emerald-600" />
                 <span>Grievance Redressal</span>
@@ -77,7 +77,7 @@ export default function Hero() {
             <div className="relative mx-auto max-w-md lg:max-w-none">
               
               {/* Image Frame */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white group">
+              <div className="relative rounded-3xl overflow-hidden landing-shadow-xl border-4 border-white bg-white group">
                 <Image
                   src="/images/hero_family.jpg"
                   alt="Happy rural Indian family using digital tablet for welfare scheme access"
@@ -89,7 +89,7 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none" />
                 
                 {/* Floating Overlay Badge on Hero image */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-lg flex items-center gap-3">
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-white/60 landing-shadow-lg flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { api } from "@/lib/api";
+import { GrievanceReport } from "@/lib/reports";
 import StatusDropdown from "./StatusDropdown";
 import {
   AlertTriangle,
@@ -80,7 +81,7 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
         await api.updateReportStatus(
           assignModalReport.id,
           {
-            status: assignModalReport.status === "pending" ? "in_progress" : assignModalReport.status,
+            status: (assignModalReport.status as string) === "pending" || assignModalReport.status === "Pending" ? "in_progress" : assignModalReport.status,
             officer_note: `Assigned to: ${officerNameInput.trim()}`
           },
           token
@@ -124,7 +125,7 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
 
   // Filter pipeline
   let filtered = reports.filter((r) => {
-    if (priorityOnly && !r.escalated) return false;
+    if (priorityOnly && !((r as any).escalated || r.priority === "Urgent" || r.priority === "High")) return false;
     
     // Normalize string formats from API
     const rCat = (r.category || "").replace("_", " ");
@@ -325,17 +326,17 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
                     <td className="p-3.5">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${
-                          r.escalated
+                          (r as any).escalated || r.priority === "Urgent"
                             ? "bg-rose-100 text-rose-800 border border-rose-200"
                             : "bg-slate-100 text-slate-700 border border-slate-200"
                         }`}
                       >
-                        {r.escalated ? "Urgent" : "Normal"}
+                        {(r as any).escalated || r.priority === "Urgent" ? "Urgent" : r.priority || "Normal"}
                       </span>
                     </td>
                     <td className="p-3.5">
                       <StatusDropdown
-                        currentStatus={r.status.replace("_", " ")}
+                        currentStatus={r.status as any}
                         onStatusChange={(newStatus) => handleStatusChange(r.id, newStatus)}
                       />
                     </td>
