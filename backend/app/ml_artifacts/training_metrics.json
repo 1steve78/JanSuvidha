@@ -1,0 +1,88 @@
+{
+  "n_profiles": 8000,
+  "n_schemes_used": 20,
+  "schemes_dropped": [],
+  "overall_micro_f1": 0.999,
+  "per_scheme": {
+    "PM-KISAN": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Ayushman Bharat (PM-JAY)": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "PM Awas Yojana (Urban)": {
+      "f1": 1.0,
+      "accuracy": 0.999
+    },
+    "National Scholarship Portal \u2014 Pre-Matric": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "PM Ujjwala Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Sukanya Samriddhi Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Atal Pension Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "e-Shram Registration Benefits": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Indira Gandhi National Old Age Pension Scheme": {
+      "f1": 0.997,
+      "accuracy": 0.999
+    },
+    "Indira Gandhi National Widow Pension Scheme": {
+      "f1": 0.992,
+      "accuracy": 0.999
+    },
+    "Indira Gandhi National Disability Pension Scheme": {
+      "f1": 0.998,
+      "accuracy": 0.999
+    },
+    "National Scholarship Portal \u2014 Post-Matric": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "PM Fasal Bima Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Beti Bachao Beti Padhao \u2014 allied benefits": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Pradhan Mantri Jan Dhan Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "Stand-Up India Scheme": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "PM Mudra Yojana": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "National Family Benefit Scheme": {
+      "f1": 0.998,
+      "accuracy": 0.999
+    },
+    "PM POSHAN (Mid-Day Meal Scheme)": {
+      "f1": 1.0,
+      "accuracy": 1.0
+    }
+  }
+}

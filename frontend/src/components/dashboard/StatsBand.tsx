@@ -13,13 +13,31 @@ import {
 import { getMetricsForDateRange } from "@/lib/dashboardMetrics";
 
 interface StatsBandProps {
+  reports?: any[];
   timeframe?: string;
   startDate?: string;
   endDate?: string;
 }
 
-export default function StatsBand({ timeframe = "30d", startDate = "2026-07-09", endDate = "2026-08-08" }: StatsBandProps) {
-  const metrics = getMetricsForDateRange(startDate, endDate);
+export default function StatsBand({ reports = [], timeframe = "30d", startDate = "2026-07-09", endDate = "2026-08-08" }: StatsBandProps) {
+  // Use real reports if provided, else fallback to mock metrics
+  const mockMetrics = getMetricsForDateRange(startDate, endDate);
+  
+  const total = reports.length;
+  const resolvedCount = reports.filter(r => r.status === "resolved").length;
+  const urgentCount = reports.filter(r => r.escalated).length;
+  const resRate = total > 0 ? ((resolvedCount / total) * 100).toFixed(1) : "0.0";
+  const resRateStr = `${resRate}%`;
+  const daysCount = mockMetrics.daysCount;
+  
+  const metrics = reports.length > 0 ? {
+    total,
+    resolvedCount,
+    urgentCount,
+    resRateStr,
+    avgTimeStr: "2.1d", // Hardcoded avg time for now
+    daysCount
+  } : mockMetrics;
 
   const stats = [
     {

@@ -5,8 +5,8 @@ import CategoryPicker from "./CategoryPicker";
 import PhotoUpload from "./PhotoUpload";
 import GeotagMapPreview, { LocationData } from "./GeotagMapPreview";
 import ConfirmationScreen, { SubmittedReportData } from "./ConfirmationScreen";
-import { ShieldCheck, Send, AlertCircle, Info, Lock, Sparkles } from "lucide-react";
-import { saveDatabaseReport } from "@/lib/reports";
+import { ShieldCheck, Send, AlertCircle, Info, Lock, Sparkles, Loader2 } from "lucide-react";
+import { api } from "@/lib/api";
 
 export type ReportCategory = "Harassment" | "Corruption" | "Civic Issue" | "Safety";
 
@@ -96,34 +96,32 @@ export default function ReportForm() {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const mockTrackingId = `JSV-2026-${randomSuffix}`;
-
-      saveDatabaseReport({
-        id: mockTrackingId,
-        category: selectedCategory!,
+    try {
+      const payload = {
+        category: selectedCategory!.toLowerCase().replace(" ", "_"),
         description: description.trim(),
         location: location.address,
-        status: "Pending",
-        priority: selectedCategory === "Safety" || selectedCategory === "Corruption" ? "Urgent" : "High",
-        createdAt: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      });
-
+      };
+      
+      const response = await api.submitReport(payload);
+      
       setSubmittedData({
-        trackingId: mockTrackingId,
+        trackingId: response.id,
         category: selectedCategory!,
         description: description.trim(),
         photoName: photo ? photo.name : undefined,
         locationText: location.address,
-        createdAt: new Date().toLocaleString("en-US", {
+        createdAt: new Date(response.created_at || Date.now()).toLocaleString("en-US", {
           dateStyle: "medium",
           timeStyle: "short",
         }),
       });
-
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit report. Please try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 1200);
+    }
   };
 
   const handleReset = () => {
@@ -241,7 +239,7 @@ export default function ReportForm() {
         >
           {isSubmitting ? (
             <>
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
               <span>Submitting Secure Grievance Report...</span>
             </>
           ) : (

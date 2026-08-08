@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Sparkles, ShieldCheck, Cpu } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, ShieldCheck, Cpu, Loader2 } from "lucide-react";
 import StepProgressBar from "./StepProgressBar";
 import IncomeStep from "./IncomeStep";
 import OccupationStep from "./OccupationStep";
 import DemographicsStep from "./DemographicsStep";
+import { api } from "@/lib/api";
+import { useMatchStore } from "@/lib/store";
 
 type FormData = {
   income: string;
@@ -44,6 +46,8 @@ export default function MultiStepForm() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [formData, setFormData] = useState<FormData>(DEFAULT_FORM);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const setResults = useMatchStore((state) => state.setResults);
 
   const updateForm = (fields: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...fields }));
@@ -57,8 +61,45 @@ export default function MultiStepForm() {
     if (currentStep > 1) setCurrentStep((s) => (s - 1) as 1 | 2 | 3);
   };
 
-  const handleSubmit = () => {
-    router.push("/match/results");
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      // Convert frontend form strings to backend numeric/bool expected values
+      const incomeMap: Record<string, number> = {
+        "< 1L": 50000,
+        "1L-2.5L": 150000,
+        "2.5L-5L": 350000,
+        "5L-8L": 650000,
+        "> 8L": 1000000,
+      };
+      const ageMap: Record<string, number> = {
+        "18-25": 22,
+        "26-45": 35,
+        "46-60": 53,
+        "60+": 65,
+      };
+      
+      const payload = {
+        income: incomeMap[formData.income] || 150000,
+        age: ageMap[formData.age] || 35,
+        occupation: formData.occupation.toLowerCase(),
+        gender: formData.gender.toLowerCase(),
+        category: formData.socialCategory,
+        state: formData.state,
+        land_ownership: formData.landHolding !== "None",
+        student_status: formData.occupation === "Student",
+        family_size: parseInt(formData.familyCount.split("-")[0]) || 4,
+      };
+
+      const data = await api.matchSchemes(payload);
+      setResults(data.matches);
+      router.push("/match/results");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to find schemes.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleStepClick = (step: number) => {
@@ -133,11 +174,16 @@ export default function MultiStepForm() {
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:scale-105 transition-all duration-200"
+                  disabled={isSubmitting}
+                  className="flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:hover:scale-100"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  Find Eligible Schemes
-                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                  )}
+                  {isSubmitting ? "Matching..." : "Find Eligible Schemes"}
+                  {!isSubmitting && <Sparkles className="w-4 h-4 text-amber-300" />}
                 </button>
               )}
             </div>

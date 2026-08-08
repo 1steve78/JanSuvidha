@@ -13,6 +13,7 @@ import {
   Sparkles
 } from "lucide-react";
 import Link from "next/link";
+import { api } from "@/lib/api";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -27,32 +28,24 @@ export default function AdminLoginPage() {
   const VALID_USERNAMES = ["admin", "officer", "jan_admin", "officer@jansuvidha.gov.in"];
   const VALID_PASSWORDS = ["admin123", "admin", "password123", "jansuvidha2026"];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      const cleanUser = username.trim().toLowerCase();
-      const cleanPass = password.trim();
-
-      const isValidUser = VALID_USERNAMES.includes(cleanUser);
-      const isValidPass = VALID_PASSWORDS.includes(cleanPass);
-
-      if (isValidUser && isValidPass) {
-        // Store authenticated session
-        localStorage.setItem("jan_suvidha_admin_auth", "true");
-        localStorage.setItem("jan_suvidha_admin_user", username.trim());
-        if (rememberMe) {
-          localStorage.setItem("jan_suvidha_admin_remember", "true");
-        }
-        setIsLoading(false);
-        router.push("/dashboard");
-      } else {
-        setIsLoading(false);
-        setError("Invalid Username or Password. Please check your admin credentials.");
+    try {
+      const response = await api.adminLogin(username.trim().toLowerCase(), password.trim());
+      // Store authenticated session token
+      localStorage.setItem("jan_suvidha_admin_auth_token", response.access_token);
+      if (rememberMe) {
+        localStorage.setItem("jan_suvidha_admin_remember", "true");
       }
-    }, 600);
+      router.push("/dashboard");
+    } catch (err) {
+      setError("Invalid Username or Password. Please check your admin credentials.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

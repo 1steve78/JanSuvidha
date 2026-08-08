@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import StatsBand from "@/components/dashboard/StatsBand";
 import CategoryDonutChart from "@/components/dashboard/CategoryDonutChart";
 import ResolutionRateChart from "@/components/dashboard/ResolutionRateChart";
-import { GrievanceReport, getDatabaseReports } from "@/lib/reports";
+import { api } from "@/lib/api";
 import {
   ShieldAlert,
   Lock,
@@ -40,26 +40,35 @@ export default function DashboardPage() {
   const [endDate, setEndDate] = useState<string>(todayStr);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const [dbReports, setDbReports] = useState<GrievanceReport[]>([]);
+  const [dbReports, setDbReports] = useState<any[]>([]);
+
+  const fetchReports = async () => {
+    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
+    if (token) {
+      try {
+        const reports = await api.getAdminReports(token);
+        setDbReports(reports);
+      } catch (e) {
+        console.error("Failed to load admin reports", e);
+      }
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
-    // Check if admin token or session exists in localStorage
-    const savedAdmin = localStorage.getItem("jan_suvidha_admin_auth");
-    if (savedAdmin === "true") {
+    // Check if admin token exists
+    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
+    if (token) {
       setIsAdmin(true);
+      fetchReports();
     }
-    // Load database reports (no fake random data generated)
-    setDbReports(getDatabaseReports());
   }, []);
 
   const handleAdminToggle = (status: boolean) => {
     setIsAdmin(status);
     if (!status) {
-      localStorage.removeItem("jan_suvidha_admin_auth");
+      localStorage.removeItem("jan_suvidha_admin_auth_token");
       localStorage.removeItem("jan_suvidha_admin_user");
-    } else {
-      localStorage.setItem("jan_suvidha_admin_auth", "true");
     }
   };
 
@@ -80,12 +89,10 @@ export default function DashboardPage() {
     setEndDate(todayStr);
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setDbReports(getDatabaseReports());
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 800);
+    await fetchReports();
+    setIsRefreshing(false);
   };
 
   if (!mounted) {
@@ -154,8 +161,8 @@ export default function DashboardPage() {
     );
   }
 
-  // Filter urgent/high priority database items
-  const urgentPriorityItems = dbReports.filter((r) => r.priority === "Urgent" || r.priority === "High");
+  // Filter urgent/high priority database items (escalated = true)
+  const urgentPriorityItems = dbReports.filter((r) => r.escalated === true);
 
   // -------------------------------------------------------------
   // ADMIN DASHBOARD VIEW

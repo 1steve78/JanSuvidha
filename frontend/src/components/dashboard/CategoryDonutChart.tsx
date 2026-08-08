@@ -23,12 +23,14 @@ const CATEGORY_COLOR_MAP: Record<string, string> = {
 };
 
 interface CategoryDonutChartProps {
+  reports?: any[];
   timeframe?: string;
   startDate?: string;
   endDate?: string;
 }
 
 export default function CategoryDonutChart({
+  reports = [],
   timeframe = "30d",
   startDate = "2026-07-09",
   endDate = "2026-08-08"
@@ -40,9 +42,25 @@ export default function CategoryDonutChart({
     setMounted(true);
   }, []);
 
-  const metrics = getMetricsForDateRange(startDate, endDate);
-  const categoryData = metrics.categoryData;
-  const totalReports = metrics.total;
+  const mockMetrics = getMetricsForDateRange(startDate, endDate);
+  
+  let categoryData = mockMetrics.categoryData;
+  let totalReports = mockMetrics.total;
+
+  if (reports.length > 0) {
+    totalReports = reports.length;
+    const counts: Record<string, number> = {};
+    reports.forEach(r => {
+      const cat = (r.category || "").replace("_", " ");
+      const formattedCat = cat.split(" ").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      counts[formattedCat] = (counts[formattedCat] || 0) + 1;
+    });
+    categoryData = Object.keys(counts).map(name => ({
+      name,
+      value: counts[name],
+      percentage: ((counts[name] / totalReports) * 100).toFixed(1) + "%"
+    }));
+  }
 
   if (!mounted) {
     return (
@@ -92,7 +110,7 @@ export default function CategoryDonutChart({
               Reports by Category
             </h3>
             <p className="text-xs text-slate-500">
-              {metrics.daysCount} day{metrics.daysCount > 1 ? "s" : ""} date range breakdown ({startDate} to {endDate})
+              {mockMetrics.daysCount} day{mockMetrics.daysCount > 1 ? "s" : ""} date range breakdown ({startDate} to {endDate})
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { GrievanceReport, getDatabaseReports, updateReportStatus, saveDatabaseReport } from "@/lib/reports";
+import { api } from "@/lib/api";
 import StatusDropdown from "./StatusDropdown";
 import {
   AlertTriangle,
@@ -35,9 +35,24 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
   const [newLoc, setNewLoc] = useState("");
   const [newPriority, setNewPriority] = useState<GrievanceReport["priority"]>("Urgent");
 
-  const loadReports = () => {
-    const data = getDatabaseReports();
-    setReports(data);
+  const loadReports = async () => {
+    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
+    if (token) {
+      try {
+        const data = await api.getAdminReports(token);
+        const mappedData = data.map((r: any) => {
+          const assignLog = r.status_logs?.slice().reverse().find((l: any) => l.officer_note?.startsWith("Assigned to:"));
+          const assignedOfficer = assignLog ? assignLog.officer_note.replace("Assigned to: ", "") : null;
+          return {
+            ...r,
+            assignedOfficer
+          };
+        });
+        setReports(mappedData);
+      } catch (err) {
+        console.error("Failed to load reports", err);
+      }
+    }
   };
 
   useEffect(() => {
@@ -45,39 +60,54 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
     loadReports();
   }, []);
 
-  const handleStatusChange = (id: string, newStatus: GrievanceReport["status"]) => {
-    const updated = updateReportStatus(id, newStatus);
-    setReports(updated);
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
+    if (token) {
+      try {
+        await api.updateReportStatus(id, { status: newStatus.toLowerCase().replace(" ", "_") }, token);
+        loadReports();
+      } catch (err) {
+        console.error("Failed to update status", err);
+      }
+    }
   };
 
-  const handleAssignOfficer = () => {
+  const handleAssignOfficer = async () => {
     if (!assignModalReport || !officerNameInput.trim()) return;
-    const updated = updateReportStatus(
-      assignModalReport.id,
-      assignModalReport.status === "Pending" ? "In Progress" : assignModalReport.status,
-      officerNameInput.trim()
-    );
-    setReports(updated);
+    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
+    if (token) {
+      try {
+        await api.updateReportStatus(
+          assignModalReport.id,
+          {
+            status: assignModalReport.status === "pending" ? "in_progress" : assignModalReport.status,
+            officer_note: `Assigned to: ${officerNameInput.trim()}`
+          },
+          token
+        );
+        loadReports();
+      } catch (err) {
+        console.error("Failed to assign officer", err);
+      }
+    }
     setAssignModalReport(null);
     setOfficerNameInput("");
   };
 
-  const handleCreateTestRecord = (e: React.FormEvent) => {
+  const handleCreateTestRecord = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDesc.trim() || !newLoc.trim()) return;
 
-    const newReport: GrievanceReport = {
-      id: `GRV-${Math.floor(1000 + Math.random() * 9000)}`,
-      category: newCategory,
-      description: newDesc.trim(),
-      location: newLoc.trim(),
-      status: "Pending",
-      priority: newPriority,
-      createdAt: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    };
-
-    saveDatabaseReport(newReport);
-    loadReports();
+    try {
+      await api.submitReport({
+        category: newCategory.toLowerCase().replace(" ", "_"),
+        description: newDesc.trim(),
+        location: newLoc.trim()
+      });
+      loadReports();
+    } catch (err) {
+      console.error("Failed to submit test report", err);
+    }
     setShowAddDemoModal(false);
     setNewDesc("");
     setNewLoc("");
@@ -94,16 +124,23 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
 
   // Filter pipeline
   let filtered = reports.filter((r) => {
-    if (priorityOnly && r.priority !== "Urgent" && r.priority !== "High") return false;
-    if (categoryFilter !== "all" && r.category !== categoryFilter) return false;
-    if (statusFilter !== "all" && r.status !== statusFilter) return false;
+    if (priorityOnly && !r.escalated) return false;
+    
+    // Normalize string formats from API
+    const rCat = (r.category || "").replace("_", " ");
+    const rStatus = (r.status || "").replace("_", " ");
+    
+    if (categoryFilter !== "all" && rCat.toLowerCase() !== categoryFilter.toLowerCase()) return false;
+    if (statusFilter !== "all" && rStatus.toLowerCase() !== statusFilter.toLowerCase()) return false;
+    
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      const matchId = r.id.toLowerCase().includes(q);
-      const matchDesc = r.description.toLowerCase().includes(q);
-      const matchLoc = r.location.toLowerCase().includes(q);
-      const matchOfficer = r.assignedOfficer?.toLowerCase().includes(q);
-      if (!matchId && !matchDesc && !matchLoc && !matchOfficer) return false;
+      const matchId = (r.id || "").toLowerCase().includes(q);
+      const matchDesc = (r.description || "").toLowerCase().includes(q);
+      const matchLoc = (r.location || "").toLowerCase().includes(q);
+      
+      // We don't have assignedOfficer explicitly in the model unless in notes
+      if (!matchId && !matchDesc && !matchLoc) return false;
     }
     return true;
   });
@@ -258,8 +295,8 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
                   <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="p-3.5 font-mono font-bold text-indigo-600">{r.id}</td>
                     <td className="p-3.5">
-                      <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                        {r.category}
+                      <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 capitalize">
+                        {r.category.replace("_", " ")}
                       </span>
                     </td>
                     <td className="p-3.5 max-w-xs truncate font-medium text-slate-900" title={r.description}>
@@ -288,19 +325,17 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
                     <td className="p-3.5">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${
-                          r.priority === "Urgent"
+                          r.escalated
                             ? "bg-rose-100 text-rose-800 border border-rose-200"
-                            : r.priority === "High"
-                            ? "bg-amber-100 text-amber-800 border border-amber-200"
                             : "bg-slate-100 text-slate-700 border border-slate-200"
                         }`}
                       >
-                        {r.priority}
+                        {r.escalated ? "Urgent" : "Normal"}
                       </span>
                     </td>
                     <td className="p-3.5">
                       <StatusDropdown
-                        currentStatus={r.status}
+                        currentStatus={r.status.replace("_", " ")}
                         onStatusChange={(newStatus) => handleStatusChange(r.id, newStatus)}
                       />
                     </td>
@@ -401,7 +436,7 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
                 <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
                 <select
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value as GrievanceReport["category"])}
+                  onChange={(e) => setNewCategory(e.target.value as any)}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="Civic Issue">Civic Issue</option>
@@ -411,19 +446,7 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Priority</label>
-                <select
-                  value={newPriority}
-                  onChange={(e) => setNewPriority(e.target.value as GrievanceReport["priority"])}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="Urgent">Urgent</option>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
+
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Description</label>

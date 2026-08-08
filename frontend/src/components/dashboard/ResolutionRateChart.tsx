@@ -15,12 +15,14 @@ import { BarChart3, TrendingUp } from "lucide-react";
 import { getMetricsForDateRange } from "@/lib/dashboardMetrics";
 
 interface ResolutionRateChartProps {
+  reports?: any[];
   timeframe?: string;
   startDate?: string;
   endDate?: string;
 }
 
 export default function ResolutionRateChart({
+  reports = [],
   timeframe = "30d",
   startDate = "2026-07-09",
   endDate = "2026-08-08"
@@ -31,7 +33,33 @@ export default function ResolutionRateChart({
     setMounted(true);
   }, []);
 
-  const metrics = getMetricsForDateRange(startDate, endDate);
+  const mockMetrics = getMetricsForDateRange(startDate, endDate);
+  
+  let barData = mockMetrics.barData;
+  let resRateStr = mockMetrics.resRateStr;
+  
+  if (reports.length > 0) {
+    const total = reports.length;
+    const resolvedCount = reports.filter(r => r.status === "resolved").length;
+    const resRate = total > 0 ? ((resolvedCount / total) * 100).toFixed(1) : "0.0";
+    resRateStr = `${resRate}%`;
+    
+    // Aggregate by date
+    const byDate: Record<string, { received: number, resolved: number }> = {};
+    reports.forEach(r => {
+      const d = new Date(r.created_at || Date.now());
+      const period = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      if (!byDate[period]) byDate[period] = { received: 0, resolved: 0 };
+      byDate[period].received++;
+      if (r.status === "resolved") byDate[period].resolved++;
+    });
+    
+    // Sort and format
+    barData = Object.keys(byDate).sort((a, b) => new Date(a).getTime() - new Date(b).getTime()).map(period => ({
+      period,
+      ...byDate[period]
+    }));
+  }
 
   if (!mounted) {
     return (
@@ -94,7 +122,7 @@ export default function ResolutionRateChart({
         </div>
         <div className="flex items-center gap-1.5 text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200/60">
           <TrendingUp className="w-3.5 h-3.5" />
-          <span>Avg. {metrics.resRateStr}</span>
+          <span>Avg. {resRateStr}</span>
         </div>
       </div>
 
@@ -102,7 +130,7 @@ export default function ResolutionRateChart({
       <div className="w-full flex-1 min-h-[260px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={metrics.barData}
+            data={barData}
             margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
             barGap={6}
           >
@@ -147,7 +175,7 @@ export default function ResolutionRateChart({
       </div>
 
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-        <span>Interval breakdown for {metrics.daysCount} day{metrics.daysCount > 1 ? "s" : ""}</span>
+        <span>Interval breakdown for {mockMetrics.daysCount} day{mockMetrics.daysCount > 1 ? "s" : ""}</span>
         <span className="font-bold text-slate-700">
           Target SLA Resolution: &gt; 80%
         </span>

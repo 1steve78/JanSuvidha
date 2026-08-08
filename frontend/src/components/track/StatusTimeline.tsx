@@ -18,6 +18,9 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { useEffect } from "react";
+import { api } from "@/lib/api";
+
 interface StatusStep {
   id: string;
   title: string;
@@ -33,145 +36,43 @@ interface StatusTimelineProps {
 
 export default function StatusTimeline({ reportId }: StatusTimelineProps) {
   const router = useRouter();
-  const displayId = reportId ? decodeURIComponent(reportId) : "JSV-2026-8942-X9K";
+  const displayId = reportId ? decodeURIComponent(reportId) : "";
 
   const [searchInput, setSearchInput] = useState(displayId);
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  const [reportData, setReportData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchReport = async (id: string) => {
+    if (!id) {
+      setIsLoading(false);
+      return;
+    }
+    setIsRefreshing(true);
+    try {
+      const data = await api.trackReport(id);
+      setReportData(data);
+      setError("");
+    } catch (err) {
+      setError("Report not found or invalid ID.");
+      setReportData(null);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReport(displayId);
+  }, [displayId]);
 
   // Quick preset sample tracking IDs for instant testing
   const samplePresets = [
-    { id: "JSV-2026-8942-X9K", label: "In Progress (Default)" },
-    { id: "JSV-2026-1042-A1B", label: "Under Review" },
-    { id: "JSV-2026-9900-Z99", label: "Resolved" },
+    { id: "e9b25cc4-7e8c-4a30-9b81-abc123def456", label: "Sample ID (UUID format)" },
   ];
-
-  // Dynamic timeline generator based on input tracking ID
-  const getTimelineSteps = (id: string): { steps: StatusStep[]; currentBadge: string; category: string; location: string } => {
-    const isResolved = id.includes("Z99") || id.toLowerCase().includes("resolved");
-    const isUnderReview = id.includes("A1B") || id.toLowerCase().includes("review");
-
-    if (isResolved) {
-      return {
-        category: "Safety Hazard",
-        location: "Sector 12, Janakpuri, New Delhi",
-        currentBadge: "Resolved",
-        steps: [
-          {
-            id: "submitted",
-            title: "Submitted",
-            description: "Grievance report received and cryptographically logged into central registry.",
-            timestamp: "Aug 6, 2026 • 10:00 AM",
-            status: "completed",
-          },
-          {
-            id: "under_review",
-            title: "Under Review",
-            description: "Validated by system triage and assigned to Nodal Safety Officer.",
-            timestamp: "Aug 6, 2026 • 11:30 AM",
-            status: "completed",
-            officerNote: "Assigned to Safety Officer: M. Verma",
-          },
-          {
-            id: "in_progress",
-            title: "In Progress",
-            description: "Field hazard containment team deployed.",
-            timestamp: "Aug 7, 2026 • 09:00 AM",
-            status: "completed",
-            officerNote: "Hazard repair completed and safety certification issued.",
-          },
-          {
-            id: "resolved",
-            title: "Resolved",
-            description: "Issue successfully resolved and citizen feedback verified.",
-            timestamp: "Aug 7, 2026 • 04:15 PM",
-            status: "completed",
-            officerNote: "Audit log closed with high satisfaction rating.",
-          },
-        ],
-      };
-    }
-
-    if (isUnderReview) {
-      return {
-        category: "Corruption / Official Misconduct",
-        location: "Zone 3 Municipal Registry Office",
-        currentBadge: "Under Review",
-        steps: [
-          {
-            id: "submitted",
-            title: "Submitted",
-            description: "Grievance report received and cryptographically logged into central registry.",
-            timestamp: "Aug 8, 2026 • 08:30 AM",
-            status: "completed",
-          },
-          {
-            id: "under_review",
-            title: "Under Review",
-            description: "Report forwarded to Vigilance Officer for initial assessment.",
-            timestamp: "Aug 8, 2026 • 10:15 AM",
-            status: "current",
-            officerNote: "Preliminary evidence review underway by Internal Audit.",
-          },
-          {
-            id: "in_progress",
-            title: "In Progress",
-            description: "Formal inquiry committee action and statement recording.",
-            timestamp: "Est. Aug 9, 2026",
-            status: "pending",
-          },
-          {
-            id: "resolved",
-            title: "Resolved",
-            description: "Final disposition report published and disciplinary action enforced.",
-            timestamp: "Est. Aug 11, 2026",
-            status: "pending",
-          },
-        ],
-      };
-    }
-
-    // Default "In Progress" timeline
-    return {
-      category: "Civic Issue",
-      location: "Sector 4, Connaught Place, New Delhi",
-      currentBadge: "In Progress",
-      steps: [
-        {
-          id: "submitted",
-          title: "Submitted",
-          description: "Grievance report received and cryptographically logged into central registry.",
-          timestamp: "Aug 8, 2026 • 09:15 AM",
-          status: "completed",
-        },
-        {
-          id: "under_review",
-          title: "Under Review",
-          description: "Validated by system triage and assigned to Nodal Grievance Officer.",
-          timestamp: "Aug 8, 2026 • 10:30 AM",
-          status: "completed",
-          officerNote: "Assigned to District Officer: R. Sharma (Public Works Department)",
-        },
-        {
-          id: "in_progress",
-          title: "In Progress",
-          description: "Field inspection team dispatched to site for physical verification and corrective action.",
-          timestamp: "Aug 8, 2026 • 02:45 PM",
-          status: "current",
-          officerNote: "Inspection report filed. Repair crew scheduled for morning deployment.",
-        },
-        {
-          id: "resolved",
-          title: "Resolved",
-          description: "Issue resolved, site photographic proof uploaded, and audit closed.",
-          timestamp: "Est. Completion: Aug 9, 2026",
-          status: "pending",
-        },
-      ],
-    };
-  };
-
-  const { steps, currentBadge, category, location } = getTimelineSteps(displayId);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,8 +93,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
   };
 
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 800);
+    fetchReport(displayId);
   };
 
   return (
@@ -304,115 +204,104 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
 
       {/* Main Single Centered Card */}
       <div className="bg-white/95 backdrop-blur-sm border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-lg space-y-6">
-        {/* Report Category Summary Badge Header */}
-        <div className="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 flex items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-blue-600 text-white">
-              <Building2 className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="font-bold text-slate-900">Category: {category}</p>
-              <p className="text-slate-500 font-medium flex items-center gap-1 mt-0.5">
-                <MapPin className="w-3 h-3 text-blue-600" /> {location}
-              </p>
-            </div>
+        
+        {isLoading ? (
+          <div className="py-20 flex flex-col items-center justify-center space-y-4">
+            <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
+            <p className="text-slate-500 font-medium">Fetching report status...</p>
           </div>
-
-          <span
-            className={`px-2.5 py-1 rounded-full font-bold text-[11px] border shrink-0 ${
-              currentBadge === "Resolved"
-                ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                : currentBadge === "Under Review"
-                ? "bg-indigo-100 text-indigo-800 border-indigo-200"
-                : "bg-amber-100 text-amber-800 border-amber-200"
-            }`}
-          >
-            {currentBadge}
-          </span>
-        </div>
-
-        {/* Vertical Timeline */}
-        <div className="relative pl-6 sm:pl-8 space-y-8 py-2">
-          {/* Vertical Connecting Guide Line */}
-          <div className="absolute left-[17px] sm:left-[25px] top-4 bottom-4 w-0.5 bg-slate-200 pointer-events-none" />
-
-          {steps.map((step) => {
-            const isCompleted = step.status === "completed";
-            const isCurrent = step.status === "current";
-            const isPending = step.status === "pending";
-
-            return (
-              <div key={step.id} className="relative flex items-start gap-4 group">
-                {/* Step Node Marker Icon */}
-                <div className="absolute -left-[24px] sm:-left-[32px] top-0.5 z-10 flex items-center justify-center">
-                  {isCompleted && (
-                    <div className="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md border-2 border-white">
-                      <CheckCircle2 className="w-4 h-4 stroke-[3]" />
-                    </div>
-                  )}
-
-                  {isCurrent && (
-                    <div className="relative flex items-center justify-center">
-                      <span className="absolute w-9 h-9 rounded-full bg-blue-500/30 animate-ping" />
-                      <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white font-bold text-xs ring-4 ring-blue-100">
-                        <Clock className="w-4 h-4 stroke-[2.5]" />
-                      </div>
-                    </div>
-                  )}
-
-                  {isPending && (
-                    <div className="w-7 h-7 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center shadow-xs">
-                      <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                    </div>
-                  )}
+        ) : error || !reportData ? (
+          <div className="py-10 flex flex-col items-center text-center space-y-3">
+            <div className="p-4 rounded-full bg-rose-50 text-rose-500 mb-2">
+              <Search className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-800">No Report Found</h3>
+            <p className="text-slate-500 text-sm max-w-sm">
+              We couldn't find a report with that tracking ID. Please check the ID and try again.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Report Category Summary Badge Header */}
+            <div className="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-blue-600 text-white">
+                  <Building2 className="w-4 h-4" />
                 </div>
-
-                {/* Step Content Box */}
-                <div
-                  className={`flex-1 p-4 rounded-2xl border transition-all duration-200 ${
-                    isCurrent
-                      ? "bg-blue-50/70 border-blue-200 shadow-sm ring-1 ring-blue-300"
-                      : isCompleted
-                      ? "bg-slate-50/60 border-slate-200/80"
-                      : "bg-white border-slate-100 opacity-60"
-                  }`}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                    <h3
-                      className={`text-base font-bold ${
-                        isCurrent
-                          ? "text-blue-900"
-                          : isCompleted
-                          ? "text-slate-900"
-                          : "text-slate-500"
-                      }`}
-                    >
-                      {step.title}
-                    </h3>
-                    <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> {step.timestamp}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                    {step.description}
+                <div>
+                  <p className="font-bold text-slate-900 capitalize">Category: {reportData.category.replace("_", " ")}</p>
+                  <p className="text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+                    <MapPin className="w-3 h-3 text-blue-600" /> {reportData.location || "Location not provided"}
                   </p>
-
-                  {/* Officer Note snippet if available */}
-                  {step.officerNote && (
-                    <div className="mt-2.5 p-2.5 rounded-xl bg-white/80 border border-slate-200/70 text-[11px] text-slate-700 flex items-start gap-2">
-                      <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-bold text-slate-800">Officer Note: </span>
-                        <span>{step.officerNote}</span>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              <span
+                className={`px-2.5 py-1 rounded-full font-bold text-[11px] border shrink-0 capitalize ${
+                  reportData.status === "resolved"
+                    ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+                    : reportData.status === "under_review" || reportData.status === "in_progress"
+                    ? "bg-indigo-100 text-indigo-800 border-indigo-200"
+                    : "bg-amber-100 text-amber-800 border-amber-200"
+                }`}
+              >
+                {reportData.status.replace("_", " ")}
+              </span>
+            </div>
+
+            {/* Vertical Timeline */}
+            <div className="relative pl-6 sm:pl-8 space-y-8 py-2">
+              <div className="absolute left-[17px] sm:left-[25px] top-4 bottom-4 w-0.5 bg-slate-200 pointer-events-none" />
+
+              {reportData.status_logs?.map((log: any, index: number) => {
+                const isCurrent = index === reportData.status_logs.length - 1;
+                const isCompleted = !isCurrent;
+
+                return (
+                  <div key={log.id} className="relative flex items-start gap-4 group">
+                    <div className="absolute -left-[24px] sm:-left-[32px] top-0.5 z-10 flex items-center justify-center">
+                      {isCompleted && (
+                        <div className="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md border-2 border-white">
+                          <CheckCircle2 className="w-4 h-4 stroke-[3]" />
+                        </div>
+                      )}
+                      {isCurrent && (
+                        <div className="relative flex items-center justify-center">
+                          <span className="absolute w-9 h-9 rounded-full bg-blue-500/30 animate-ping" />
+                          <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white font-bold text-xs ring-4 ring-blue-100">
+                            <Clock className="w-4 h-4 stroke-[2.5]" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div
+                      className={`flex-1 p-4 rounded-2xl border transition-all duration-200 ${
+                        isCurrent
+                          ? "bg-blue-50/70 border-blue-200 shadow-sm ring-1 ring-blue-300"
+                          : "bg-slate-50/60 border-slate-200/80"
+                      }`}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                        <h3 className={`text-base font-bold capitalize ${isCurrent ? "text-blue-900" : "text-slate-900"}`}>
+                          {log.status.replace("_", " ")}
+                        </h3>
+                        <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {new Date(log.changed_at).toLocaleString()}
+                        </span>
+                      </div>
+                      {isCurrent && reportData.escalated && (
+                        <p className="text-xs font-semibold text-rose-600 mt-2">
+                          ⚠️ This report has been flagged for priority escalation due to age.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         {/* Footer Navigation Buttons */}
         <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">

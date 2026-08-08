@@ -3,11 +3,22 @@
 import { useState } from "react";
 import ResultsSummary from "@/components/results/ResultsSummary";
 import SchemeCard from "@/components/results/SchemeCard";
-import { MOCK_SCHEMES } from "@/lib/mockSchemes";
+import { useMatchStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function MatchResultsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const filteredSchemes = MOCK_SCHEMES.filter(
+  const results = useMatchStore((state) => state.results);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (results.length === 0) {
+      router.push("/match");
+    }
+  }, [results, router]);
+
+  const filteredSchemes = results.filter(
     (s) => activeCategory === "all" || s.category === activeCategory
   );
 
@@ -29,8 +40,8 @@ export default function MatchResultsPage() {
             </span>
           </div>
           <div className="grid grid-cols-1 gap-6">
-            {filteredSchemes.map((scheme) => (
-              <SchemeCard key={scheme.id} scheme={scheme} />
+            {filteredSchemes.map((scheme, i) => (
+              <SchemeCard key={scheme.id || i} scheme={scheme} />
             ))}
           </div>
           {filteredSchemes.length === 0 && (
