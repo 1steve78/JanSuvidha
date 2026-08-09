@@ -65,42 +65,42 @@ export default function Footer() {
         {/* Grid of Links & Info */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 mb-10 text-xs text-slate-900 font-medium">
           
-          {/* Column 1: Headquarters */}
+          {/* Column 1: AI Engine */}
           <div>
-            <div className="mb-1 text-slate-900 font-bold">Central Nodal Office</div>
-            <div className="text-slate-600 mb-2">Helpdesk: (+91) 11 2345 6789</div>
+            <div className="mb-1 text-slate-900 font-bold">JanSuvidha Engine</div>
+            <div className="text-slate-600 mb-2">AI-Powered Civic Platform</div>
             <div className="text-slate-600 leading-relaxed">
-              Civic Centre, Sansad Marg,<br />
-              New Delhi 110001, India
+              Powered by Google Gemini 2.5<br />
+              & XGBoost Machine Learning
             </div>
           </div>
 
-          {/* Column 2: Regional Office */}
+          {/* Column 2: Privacy */}
           <div>
-            <div className="mb-1 text-slate-900 font-bold">State Grievance Cell</div>
-            <div className="text-slate-600 mb-2">Hotline: 1800-11-2233</div>
+            <div className="mb-1 text-slate-900 font-bold">Privacy by Design</div>
+            <div className="text-slate-600 mb-2">100% Anonymous Reporting</div>
             <div className="text-slate-600 leading-relaxed">
-              Anti-Corruption Bureau HQ,<br />
-              Mumbai 400021, India
+              No PII Collected.<br />
+              Secure UUID Tracking System.
             </div>
           </div>
 
-          {/* Column 3: Quick Links */}
+          {/* Column 3: Features */}
           <div className="flex flex-col gap-2 text-slate-600">
-            <div className="text-slate-900 font-bold mb-1">Services</div>
-            <Link href="/report" className="hover:text-slate-900 transition-colors">File Anonymous Grievance</Link>
-            <Link href="/match" className="hover:text-slate-900 transition-colors">AI Scheme Finder</Link>
+            <div className="text-slate-900 font-bold mb-1">Features</div>
+            <Link href="/match" className="hover:text-slate-900 transition-colors">AI Scheme Matcher</Link>
+            <Link href="/report" className="hover:text-slate-900 transition-colors">Anonymous Grievance</Link>
             <Link href="/track" className="hover:text-slate-900 transition-colors">Track Complaint Status</Link>
-            <Link href="/dashboard" className="hover:text-slate-900 transition-colors">Public Telemetry Map</Link>
+            <Link href="/dashboard" className="hover:text-slate-900 transition-colors">Public Telemetry Dashboard</Link>
           </div>
 
           {/* Column 4: Resources */}
           <div className="flex flex-col gap-2 text-slate-600">
-            <div className="text-slate-900 font-bold mb-1">Information</div>
-            <Link href="#security" className="hover:text-slate-900 transition-colors">Data Security & Anonymity</Link>
-            <Link href="#faq" className="hover:text-slate-900 transition-colors">Frequently Asked Questions</Link>
-            <Link href="#guidelines" className="hover:text-slate-900 transition-colors">Reporting Guidelines</Link>
+            <div className="text-slate-900 font-bold mb-1">Resources</div>
+            <Link href="https://github.com/bipronil0509-prog/JanSuvidha" target="_blank" className="hover:text-slate-900 transition-colors">GitHub Repository</Link>
             <Link href="/admin/login" className="hover:text-slate-900 transition-colors">Administrator Portal</Link>
+            <Link href="#" className="hover:text-slate-900 transition-colors">Data Security & Anonymity</Link>
+            <Link href="#" className="hover:text-slate-900 transition-colors">Reporting Guidelines</Link>
           </div>
         </div>
 
