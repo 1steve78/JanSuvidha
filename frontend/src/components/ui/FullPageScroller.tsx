@@ -56,13 +56,14 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
       filter:  "blur(6px)",
       duration: DUR_OUT,
       ease:    EASE_IN,
-      onComplete: () => gsap.set(prevEl, { zIndex: 1 }),
+      onComplete: () => gsap.set(prevEl, { zIndex: 1, display: "none" }),
     });
 
     // ── enter next ──
     const from: gsap.TweenVars = {
       ...(ENTRY[next] ?? { y: dir > 0 ? 55 : -55, opacity: 0 }),
       zIndex: 2,
+      display: "flex",
     };
     gsap.set(nextEl, from);
     gsap.to(nextEl, {
@@ -79,8 +80,8 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
     refs.current.forEach((el, i) => {
       if (!el) return;
       gsap.set(el, i === 0
-        ? { opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)", zIndex: 2 }
-        : { opacity: 0, zIndex: 1 });
+        ? { opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)", zIndex: 2, display: "flex" }
+        : { opacity: 0, zIndex: 1, display: "none" });
     });
   }, []);
 
@@ -133,6 +134,14 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
     const onEnd   = (e: TouchEvent) => {
       const diff = ty - e.changedTouches[0].clientY;
       if (Math.abs(diff) < 45) return;
+
+      const panel = refs.current[cur.current];
+      if (panel) {
+        const { scrollTop, scrollHeight, clientHeight } = panel;
+        if (diff > 0 && scrollHeight - scrollTop - clientHeight > 2) return;
+        if (diff < 0 && scrollTop > 2) return;
+      }
+
       const dir = diff > 0 ? 1 : -1;
       goTo(cur.current + dir, dir as 1 | -1);
     };
@@ -147,8 +156,25 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
   // ── Keyboard ─────────────────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (["ArrowDown", "PageDown"].includes(e.key)) { e.preventDefault(); goTo(cur.current + 1,  1); }
-      if (["ArrowUp",   "PageUp"  ].includes(e.key)) { e.preventDefault(); goTo(cur.current - 1, -1); }
+      const panel = refs.current[cur.current];
+      
+      if (["ArrowDown", "PageDown"].includes(e.key)) {
+        if (panel) {
+          const { scrollTop, scrollHeight, clientHeight } = panel;
+          if (scrollHeight - scrollTop - clientHeight > 2) return;
+        }
+        e.preventDefault();
+        goTo(cur.current + 1, 1);
+      }
+      
+      if (["ArrowUp", "PageUp"].includes(e.key)) {
+        if (panel) {
+          const { scrollTop } = panel;
+          if (scrollTop > 2) return;
+        }
+        e.preventDefault();
+        goTo(cur.current - 1, -1);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -181,7 +207,7 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
             overflowX: "hidden",
             display:   "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           {panel}

@@ -39,13 +39,13 @@ export default function Header() {
             href="/dashboard"
             className="text-slate-700 hover:text-slate-900 font-medium text-[15px] px-6 py-2.5 rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all"
           >
-            Log in
+            Public Map
           </Link>
           <Link
-            href="/admin/dashboard"
+            href="/admin/login"
             className="bg-[#0f172a] hover:bg-black text-white font-medium text-[15px] px-6 py-2.5 rounded-full shadow-sm hover:shadow transition-all"
           >
-            Join now
+            Admin Portal
           </Link>
         </div>
 
