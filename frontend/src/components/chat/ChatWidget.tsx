@@ -12,12 +12,14 @@ import {
   Trash2,
   Loader2,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useChatStore } from "@/lib/store";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import ChatBubble from "./ChatBubble";
 import LanguageSelector from "./LanguageSelector";
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const {
     isOpen,
     toggleOpen,
@@ -41,22 +43,31 @@ export default function ChatWidget() {
     sendMessage,
     stopSpeaking,
     sendGreeting,
-  } = useVoiceChat(setTextInput); // <-- passes transcript into textarea
+  } = useVoiceChat(setTextInput);
 
   // Auto-scroll to newest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Show widget only after scrolling past hero
+  // Show widget everywhere except the first panel of the home page
   useEffect(() => {
-    const handleScroll = () => {
-      setShowWidget(window.scrollY > 400);
+    if (pathname !== "/") {
+      setShowWidget(true);
+      return;
+    }
+
+    // On home page, start hidden (hero section)
+    setShowWidget(false);
+
+    const handlePanelChange = (e: any) => {
+      const activePanel = e.detail?.activePanel ?? 0;
+      setShowWidget(activePanel > 0);
     };
-    handleScroll(); // Initial check
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    window.addEventListener("jansuvidha-panel-change", handlePanelChange);
+    return () => window.removeEventListener("jansuvidha-panel-change", handlePanelChange);
+  }, [pathname]);
 
   // Send greeting when first opened
   useEffect(() => {

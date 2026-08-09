@@ -47,6 +47,10 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
     busy.current = true;
     cur.current  = next;
     setActive(next);
+    
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("jansuvidha-panel-change", { detail: { activePanel: next } }));
+    }
 
     // ── exit current ──
     gsap.to(prevEl, {
