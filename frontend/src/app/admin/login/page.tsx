@@ -737,11 +737,11 @@ export default function AdminLoginPage() {
 
     try {
       const result = await api.adminLogin(username.trim(), password.trim());
-      if (result?.token) {
-        localStorage.setItem("jan_suvidha_admin_auth_token", result.token);
+      if (result?.access_token) {
+        localStorage.setItem("jan_suvidha_admin_auth_token", result.access_token);
         localStorage.setItem("jan_suvidha_admin_user", username.trim());
         if (rememberDevice) localStorage.setItem("jan_suvidha_admin_remember", "true");
-        router.push("/dashboard");
+        router.push("/admin/dashboard");
       } else {
         setError("Invalid credentials. Access denied by the server.");
       }
@@ -755,7 +755,7 @@ export default function AdminLoginPage() {
         localStorage.setItem("jan_suvidha_admin_auth_token", "demo_token_" + u);
         localStorage.setItem("jan_suvidha_admin_user", u);
         if (rememberDevice) localStorage.setItem("jan_suvidha_admin_remember", "true");
-        router.push("/dashboard");
+        router.push("/admin/dashboard");
       } else {
         setError("Invalid administrator credentials. Server-side authentication failed.");
       }
