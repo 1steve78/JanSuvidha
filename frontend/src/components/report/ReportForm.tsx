@@ -101,6 +101,8 @@ export default function ReportForm() {
         category: selectedCategory!.toLowerCase().replace(" ", "_"),
         description: description.trim(),
         location: location.address,
+        lat: location.lat,
+        lng: location.lng,
       };
       
       const response = await api.submitReport(payload);

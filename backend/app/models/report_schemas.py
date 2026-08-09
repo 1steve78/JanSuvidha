@@ -22,6 +22,7 @@ class ReportCreate(BaseModel):
     photo_url: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
+    location: Optional[str] = None
 
 class ReportUpdate(BaseModel):
     status: Optional[StatusEnum] = None
@@ -50,6 +51,7 @@ class ReportResponse(BaseModel):
     photo_url: Optional[str]
     lat: Optional[float]
     lng: Optional[float]
+    location: Optional[str]
     status: StatusEnum
     escalated: bool
     created_at: datetime

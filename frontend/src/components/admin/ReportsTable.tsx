@@ -96,7 +96,9 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
       await api.submitReport({
         category: newCategory.toLowerCase().replace(" ", "_"),
         description: newDesc.trim(),
-        location: newLoc.trim()
+        location: newLoc.trim(),
+        lat: 28.6139 + (Math.random() - 0.5) * 0.1,
+        lng: 77.2090 + (Math.random() - 0.5) * 0.1
       });
       loadReports();
     } catch (err) {

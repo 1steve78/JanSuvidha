@@ -181,6 +181,7 @@ def submit_report(report_in: ReportCreate, db: Session = Depends(get_db)):
         photo_url=report_in.photo_url,
         lat=report_in.lat,
         lng=report_in.lng,
+        location=report_in.location,
         status="submitted"
     )
     db.add(new_report)

@@ -49,6 +49,7 @@ class Report(Base):
     photo_url = Column(String, nullable=True)
     lat = Column(Numeric, nullable=True)
     lng = Column(Numeric, nullable=True)
+    location = Column(String, nullable=True)
 
     status = Column(String, default="submitted")  # submitted | under_review | in_progress | resolved
     escalated = Column(Boolean, default=False)
