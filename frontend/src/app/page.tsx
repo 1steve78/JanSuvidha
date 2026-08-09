@@ -2,7 +2,8 @@
 
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
-import CivicJusticeUnifiedSection from "@/components/home/CivicJusticeUnifiedSection";
+import CivicJusticeFeatures from "@/components/home/CivicJusticeFeatures";
+import CivicJusticeImpact from "@/components/home/CivicJusticeImpact";
 import StatsBand from "@/components/home/StatsBand";
 import TrustStrip from "@/components/home/TrustStrip";
 import Testimonial from "@/components/home/Testimonial";
@@ -22,9 +23,14 @@ export default function HomePage() {
         <Hero />
       </div>
 
-      {/* ── 1. CIVIC JUSTICE ── */}
-      <div className="w-full min-h-full bg-slate-50">
-        <CivicJusticeUnifiedSection />
+      {/* ── 1. CIVIC JUSTICE FEATURES ── */}
+      <div className="w-full min-h-full bg-slate-50 flex flex-col justify-center">
+        <CivicJusticeFeatures />
+      </div>
+
+      {/* ── 1.5. CIVIC JUSTICE IMPACT ── */}
+      <div className="w-full min-h-full bg-slate-50 flex flex-col justify-center">
+        <CivicJusticeImpact />
       </div>
 
       {/* ── 2. PILLAR CARDS ── */}
