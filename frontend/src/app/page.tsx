@@ -10,7 +10,7 @@ import FAQAccordion from "@/components/home/FAQAccordion";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen landing-page-grid">
       {/* 1. Hero */}
       <Hero />
 
@@ -24,7 +24,7 @@ export default function HomePage() {
       <HowItWorks />
 
       {/* 5. Transparency Stats Band & Trust Dashboard */}
-      <section className="py-16 bg-slate-50/70 border-y border-slate-200/60">
+      <section className="py-16 border-y border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left Side: Pastel Floating Bubble Stats */}
