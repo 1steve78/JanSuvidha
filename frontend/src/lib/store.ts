@@ -12,7 +12,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
 }));
 
 // ─── Chat Store (multilingual voice chatbot) ──────────────────────────────────
-export type ChatLanguage = "en" | "hi" | "bn";
+export type ChatLanguage = "en" | "hi";
 
 export interface ChatMessage {
   id: string;

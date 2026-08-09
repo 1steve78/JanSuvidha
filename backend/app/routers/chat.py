@@ -41,7 +41,6 @@ SCHEME_CATALOGUE = "\n".join(
 LANGUAGE_INSTRUCTIONS = {
     "en": "Respond in English.",
     "hi": "हिंदी में जवाब दें। (Respond only in Hindi)",
-    "bn": "বাংলায় উত্তর দিন। (Respond only in Bengali)",
 }
 
 SYSTEM_PROMPT_TEMPLATE = """You are JanSuvidha Saathi — a friendly, empathetic welfare guide for Indian citizens.
@@ -77,7 +76,7 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    language: str = "en"  # "en" | "hi" | "bn"
+    language: str = "en"  # "en" | "hi"
     history: Optional[List[ChatMessage]] = []
 
 

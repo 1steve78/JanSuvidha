@@ -8,14 +8,12 @@ const API_BASE = "http://127.0.0.1:8000";
 const LANG_CODE_MAP: Record<ChatLanguage, string> = {
   en: "en-IN",
   hi: "hi-IN",
-  bn: "bn-BD", // bn-BD has better TTS coverage than bn-IN on most systems
 };
 
 // Greeting messages per language
 const GREETINGS: Record<ChatLanguage, string> = {
   en: "Hello! I'm JanSuvidha Saathi. How can I help you today? You can ask me about government schemes, report a civic issue, or track your complaint.",
   hi: "नमस्ते! मैं जनसुविधा साथी हूं। आज मैं आपकी कैसे मदद कर सकता हूं? आप सरकारी योजनाओं, शिकायत दर्ज करने, या शिकायत ट्रैक करने के बारे में पूछ सकते हैं।",
-  bn: "নমস্কার! আমি জনসুবিধা সাথী। আজ আমি আপনাকে কীভাবে সাহায্য করতে পারি? আপনি সরকারি প্রকল্প, অভিযোগ দায়ের বা অভিযোগ ট্র্যাক করার বিষয়ে জিজ্ঞাসা করতে পারেন।",
 };
 
 // Best voice for language — waits for voices list to populate (Chrome async)
@@ -28,19 +26,11 @@ function getBestVoice(synth: SpeechSynthesis, lang: ChatLanguage): SpeechSynthes
   const exact = voices.find((v) => v.lang.toLowerCase() === code.toLowerCase());
   if (exact) return exact;
 
-  // 2. Same primary language (e.g. any "bn-*" voice)
+  // 2. Same primary language (e.g. any "hi-*" voice)
   const sameRoot = voices.find((v) => v.lang.toLowerCase().startsWith(primary));
   if (sameRoot) return sameRoot;
 
-  // 3. For Bengali specifically, try Google voices with "bn" anywhere in the name
-  if (lang === "bn") {
-    const googleBn = voices.find(
-      (v) => v.name.toLowerCase().includes("bengali") || v.name.toLowerCase().includes("bangla")
-    );
-    if (googleBn) return googleBn;
-  }
-
-  // 4. Fallback: null means browser default (still respects utterance.lang for accent)
+  // 3. Fallback: null means browser default (still respects utterance.lang for accent)
   return null;
 }
 
@@ -93,7 +83,7 @@ export function useVoiceChat(onTranscript?: (text: string) => void) {
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = LANG_CODE_MAP[lang];
-      utterance.rate = lang === "bn" ? 0.85 : 0.9; // slightly slower for Bengali clarity
+      utterance.rate = 0.9;
       utterance.pitch = 1.0;
 
       // Attempt to find best voice; if none found browser uses default with lang hint

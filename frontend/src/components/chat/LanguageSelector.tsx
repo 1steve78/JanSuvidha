@@ -6,7 +6,6 @@ import { useVoiceChat } from "@/hooks/useVoiceChat";
 const LANGUAGES: { code: ChatLanguage; label: string; flag: string }[] = [
   { code: "en", label: "EN", flag: "🇬🇧" },
   { code: "hi", label: "हिं", flag: "🇮🇳" },
-  { code: "bn", label: "বাং", flag: "🪷" },
 ];
 
 export default function LanguageSelector() {
