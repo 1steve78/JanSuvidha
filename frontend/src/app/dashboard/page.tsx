@@ -58,9 +58,11 @@ export default function DashboardPage() {
     if (token) {
       try {
         const reports = await api.getAdminReports(token);
-        setDbReports(reports);
+        if (Array.isArray(reports)) {
+          setDbReports(reports);
+        }
       } catch (e) {
-        console.error("Failed to load admin reports", e);
+        console.warn("Failed to load admin reports:", e);
       }
     }
   };
