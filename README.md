@@ -1,5 +1,7 @@
 # 🇮🇳 JanSuvidha — AI-Powered Welfare & Civic Platform
 
+**Live Demo:** [https://jansuvidha.yasinstudios.in/](https://jansuvidha.yasinstudios.in/)
+
 > **IEMHACKS 4.0 · Social Issues Track**
 > Bridging the gap between Indian citizens and the welfare schemes they deserve.
 
