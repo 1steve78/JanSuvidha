@@ -97,6 +97,7 @@ export default function PublicMap() {
           [97.4, 35.5] // Northeast coordinates (approx)
         ]}
         scrollZoom={false}
+        style={{ width: "100%", height: "100%" }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         interactive={true}
