@@ -107,19 +107,52 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
   // ── Wheel ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     let cooldown = false;
+    let accumulatedDelta = 0;
+    let lastWheelTime = 0;
 
     const onWheel = (e: WheelEvent) => {
+      const now = Date.now();
+      // Reset accumulator if there's a pause (e.g. 150ms)
+      if (now - lastWheelTime > 150) {
+        accumulatedDelta = 0;
+      }
+      lastWheelTime = now;
+
       const panel = refs.current[cur.current];
       if (panel) {
         const { scrollTop, scrollHeight, clientHeight } = panel;
-        if (e.deltaY > 0 && scrollHeight - scrollTop - clientHeight > 2) return;
-        if (e.deltaY < 0 && scrollTop > 2) return;
+        // Allow native scroll down if room exists
+        if (e.deltaY > 0 && scrollHeight - scrollTop - clientHeight > 2) {
+          accumulatedDelta = 0; // reset because they are scrolling internally
+          return;
+        }
+        // Allow native scroll up if room exists
+        if (e.deltaY < 0 && scrollTop > 2) {
+          accumulatedDelta = 0;
+          return;
+        }
       }
       e.preventDefault();
-      if (cooldown) return;
+
+      if (cooldown || busy.current) {
+        accumulatedDelta = 0; // Prevent building up delta while animating/cooling down
+        return;
+      }
+      
+      // Accumulate the delta
+      accumulatedDelta += e.deltaY;
+      
+      // Threshold check: ignore tiny rubber-band bounces or the very weak tail-end of inertia
+      if (Math.abs(accumulatedDelta) < 60) {
+        return;
+      }
+      
+      const dir = accumulatedDelta > 0 ? 1 : -1;
+      
       cooldown = true;
-      setTimeout(() => { cooldown = false; }, 900);
-      const dir = e.deltaY > 0 ? 1 : -1;
+      setTimeout(() => { cooldown = false; }, 1200);
+      accumulatedDelta = 0; // Reset after triggering
+      
       goTo(cur.current + dir, dir as 1 | -1);
     };
 

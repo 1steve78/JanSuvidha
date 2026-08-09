@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import MapGL, { Source, Layer } from "react-map-gl/mapbox";
+import React, { useEffect, useState, useRef } from "react";
+import MapGL, { Source, Layer, MapRef } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { api } from "@/lib/api";
 
@@ -23,6 +23,9 @@ export default function PublicMap() {
   const [reports, setReports] = useState<ReportMapData[]>([]);
   const [mergedGeojson, setMergedGeojson] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  
+  const mapRef = useRef<MapRef>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -60,6 +63,23 @@ export default function PublicMap() {
     loadData();
   }, []);
 
+  // Force resize when the container's dimensions change
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const resizeObserver = new ResizeObserver(() => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    });
+    
+    resizeObserver.observe(containerRef.current);
+    
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   if (!MAPBOX_TOKEN) {
     return (
       <div className="w-full h-[500px] bg-slate-100 flex items-center justify-center rounded-xl border border-slate-200">
@@ -85,8 +105,9 @@ export default function PublicMap() {
   };
 
   return (
-    <div className="w-full h-[500px] rounded-xl overflow-hidden shadow-sm border border-slate-200 relative">
+    <div ref={containerRef} className="w-full h-[500px] rounded-xl overflow-hidden shadow-sm border border-slate-200 relative">
       <MapGL
+        ref={mapRef}
         initialViewState={{
           longitude: 79.0, // Center of India
           latitude: 21.0,
@@ -101,7 +122,10 @@ export default function PublicMap() {
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         interactive={true}
-        onLoad={() => setMapLoaded(true)}
+        onLoad={() => {
+          setMapLoaded(true);
+          if (mapRef.current) mapRef.current.resize();
+        }}
       >
         {/* Choropleth Layer: Scheme Density */}
         {mapLoaded && mergedGeojson && (
