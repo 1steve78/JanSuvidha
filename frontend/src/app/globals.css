@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Full-Page Scroll Snap ────────────────────────────────────────────────── */
+
+/*
+ * The snap container sits below the sticky header (top: 96px) and fills
+ * the rest of the viewport using position:fixed. This way it covers the
+ * footer completely — the footer still exists in the DOM for other pages
+ * but is hidden behind the snap container on the home page.
+ */
+.snap-container {
+  position: fixed;
+  top: 96px;          /* height of the sticky header */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  /* Thin custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.3) transparent;
+  z-index: 10;        /* sits above the footer in the stacking context */
+}
+.snap-container::-webkit-scrollbar { width: 5px; }
+.snap-container::-webkit-scrollbar-track { background: transparent; }
+.snap-container::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 99px;
+}
+
+/* Each section snaps perfectly — full viewport height */
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100dvh;     /* each section = full viewport for a clean snap */
+}
+
 /* Category accent colors — keep in sync with src/lib/constants.ts */
 :root {
   --color-health: #ec4899;
@@ -40,11 +76,7 @@
 /* ─── Landing Page Grid (site-wide on home) ─── */
 
 .landing-page-grid {
-  background-color: var(--landing-bg);
-  background-image:
-    linear-gradient(var(--landing-grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--landing-grid-color) 1px, transparent 1px);
-  background-size: var(--landing-grid-size) var(--landing-grid-size);
+  background-color: transparent;
 }
 
 .landing-shadow-sm {

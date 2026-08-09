@@ -35,6 +35,14 @@ class ReportStatusLogResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class ReportMapData(BaseModel):
+    id: UUID
+    lat: float
+    lng: float
+    status: StatusEnum
+
+    model_config = ConfigDict(from_attributes=True)
+
 class ReportResponse(BaseModel):
     id: UUID
     category: CategoryEnum

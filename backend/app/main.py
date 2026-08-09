@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import match, reports, auth
+from app.routers import match, reports, auth, chat
 
 app = FastAPI(
     title="Welfare Scheme Matcher API",
@@ -36,3 +36,4 @@ def root():
 app.include_router(match.router)
 app.include_router(reports.router)
 app.include_router(auth.router)
+app.include_router(chat.router)

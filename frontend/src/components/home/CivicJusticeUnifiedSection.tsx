@@ -222,29 +222,14 @@ export default function CivicJusticeUnifiedSection() {
   return (
     <section 
       id="unified-civic-intelligence" 
-      className="relative py-20 overflow-hidden bg-slate-50/40 text-slate-900"
+      className="relative py-20 overflow-hidden bg-slate-50 text-slate-900"
     >
-      {/* ─── 1. LIGHT GRID BACKGROUND MATCHING LANDING PAGE ─── */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-60">
-        {/* Subtle grid pattern overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `linear-gradient(rgba(148, 163, 184, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.2) 1px, transparent 1px)`,
-            backgroundSize: "28px 28px",
-          }}
-        />
-        {/* Soft light radial glows */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-blue-100/50 via-indigo-50/30 to-transparent blur-3xl" />
-        <div className="absolute bottom-10 right-1/4 w-[600px] h-[600px] bg-emerald-100/40 rounded-full blur-3xl" />
-      </div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* ─── 2. TOP AREA: HEADER & FEATURE CARDS ─── */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3.5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-50 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider text-blue-600 shadow-2xs backdrop-blur-md">
-            <Shield className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#65a30d]/30 bg-[#65a30d]/10 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#65a30d] shadow-sm">
+            <Shield className="w-3.5 h-3.5 text-[#65a30d] animate-pulse" />
             <span>● CIVIC INTELLIGENCE OPERATING SYSTEM</span>
           </div>
 
@@ -257,7 +242,7 @@ export default function CivicJusticeUnifiedSection() {
           </p>
         </div>
 
-        {/* 8 Light Glassmorphism Feature Cards Grid */}
+        {/* 8 Clean Feature Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
           {FEATURE_CARDS.map((card) => {
             const IconComponent = card.icon;
@@ -269,9 +254,9 @@ export default function CivicJusticeUnifiedSection() {
                 key={card.id}
                 onMouseEnter={() => setHoveredCard(card.id)}
                 onMouseLeave={() => setHoveredCard(null)}
-                whileHover={{ y: -6, scale: 1.02 }}
-                className={`relative p-6 rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden ${
-                  isTargetedByStat ? "border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.25)] scale-102" : "hover:border-blue-300"
+                whileHover={{ y: -4 }}
+                className={`relative p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden ${
+                  isTargetedByStat ? "border-[#65a30d] shadow-[0_0_15px_rgba(101,163,13,0.15)] scale-102" : "hover:border-slate-300"
                 }`}
               >
                 <div>
@@ -285,7 +270,7 @@ export default function CivicJusticeUnifiedSection() {
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-bold font-space text-slate-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className={`text-lg font-bold font-space text-slate-900 transition-colors ${isHovered ? card.accentColor : ""}`}>
                     {card.title}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed mt-2 font-sans font-normal">
@@ -300,8 +285,8 @@ export default function CivicJusticeUnifiedSection() {
                       key={idx}
                       className={`text-[9px] font-mono font-semibold px-2 py-0.5 rounded transition-all ${
                         isHovered
-                          ? "bg-blue-50 text-blue-700 border border-blue-200"
-                          : "bg-slate-50 text-slate-500 border border-slate-200/80"
+                          ? "bg-slate-100 text-slate-800 border border-slate-200"
+                          : "bg-slate-50 text-slate-500 border border-slate-100"
                       }`}
                     >
                       {badge}

@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export const api = {
   async matchSchemes(profile: any) {
@@ -54,6 +54,17 @@ export const api = {
     if (!res.ok) throw new Error("Report not found");
     return res.json();
   },
+  async getPublicDashboardMetrics(days?: number) {
+    try {
+      const url = days ? `${API_BASE}/reports/public/metrics?days=${days}` : `${API_BASE}/reports/public/metrics`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch public metrics");
+      return await res.json();
+    } catch (err) {
+      console.warn("API getPublicDashboardMetrics offline mode:", err);
+      return null;
+    }
+  },
   async getPublicStats() {
     try {
       const res = await fetch(`${API_BASE}/reports/public`);
@@ -63,6 +74,16 @@ export const api = {
       console.warn("API getPublicStats offline mode:", err);
       return null;
     }
+  },
+  async getPublicMapData() {
+    const res = await fetch(`${API_BASE}/reports/map-data`);
+    if (!res.ok) throw new Error("Failed to fetch map data");
+    return res.json();
+  },
+  async getSchemeDensityData() {
+    const res = await fetch(`${API_BASE}/reports/schemes/density-map`);
+    if (!res.ok) throw new Error("Failed to fetch scheme density data");
+    return res.json();
   },
 
   // Admin
@@ -77,9 +98,10 @@ export const api = {
     if (!res.ok) throw new Error("Invalid Username or Password");
     return res.json();
   },
-  async getAdminReports(token: string) {
+  async getAdminReports(token: string, days?: number) {
     try {
-      const res = await fetch(`${API_BASE}/reports/admin/all`, {
+      const url = days ? `${API_BASE}/reports/admin/all?days=${days}` : `${API_BASE}/reports/admin/all`;
+      const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {

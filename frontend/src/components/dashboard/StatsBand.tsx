@@ -14,12 +14,13 @@ import { getMetricsForDateRange } from "@/lib/dashboardMetrics";
 
 interface StatsBandProps {
   reports?: any[];
+  preAggregatedData?: any;
   timeframe?: string;
   startDate?: string;
   endDate?: string;
 }
 
-export default function StatsBand({ reports = [], timeframe = "30d", startDate = "2026-07-09", endDate = "2026-08-08" }: StatsBandProps) {
+export default function StatsBand({ reports = [], preAggregatedData, timeframe = "30d", startDate = "2026-07-09", endDate = "2026-08-08" }: StatsBandProps) {
   // Use real reports if provided, else fallback to mock metrics
   const mockMetrics = getMetricsForDateRange(startDate, endDate);
   
@@ -35,7 +36,11 @@ export default function StatsBand({ reports = [], timeframe = "30d", startDate =
     resolvedCount,
     urgentCount,
     resRateStr,
-    avgTimeStr: "2.1d", // Hardcoded avg time for now
+    avgTimeStr: "2.1d",
+    daysCount
+  } : preAggregatedData ? {
+    ...preAggregatedData,
+    avgTimeStr: "2.1d",
     daysCount
   } : mockMetrics;
 
@@ -93,7 +98,7 @@ export default function StatsBand({ reports = [], timeframe = "30d", startDate =
         return (
           <div
             key={stat.id}
-            className="relative bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 overflow-hidden group"
+            className="relative bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:bg-gradient-to-br hover:from-orange-50/50 hover:to-emerald-50/50 transition-all duration-200 overflow-hidden group"
           >
             <div className={`absolute top-0 left-0 right-0 h-1.5 ${stat.accentBorder}`} />
             

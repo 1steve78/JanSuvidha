@@ -15,12 +15,14 @@ export default async function TrackPage({
   const resolvedParams = await params;
 
   return (
-    <div className="relative overflow-hidden landing-page-grid min-h-screen pt-8 pb-20 flex flex-col justify-center items-center">
-      {/* Decorative backdrop glows matching Landing Page Hero */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+    <div className="relative min-h-screen bg-white pb-20">
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 0% 0%, rgba(255,185,50,0.35) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(30,160,30,0.25) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.6) 40%, #ffffff 90%)" }} />
+      </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <StatusTimeline reportId={resolvedParams.id} />
       </div>
     </div>

@@ -15,6 +15,7 @@ import { BarChart3, TrendingUp } from "lucide-react";
 import { getMetricsForDateRange } from "@/lib/dashboardMetrics";
 
 interface ResolutionRateChartProps {
+  preAggregatedData?: any[];
   reports?: any[];
   timeframe?: string;
   startDate?: string;
@@ -22,6 +23,7 @@ interface ResolutionRateChartProps {
 }
 
 export default function ResolutionRateChart({
+  preAggregatedData,
   reports = [],
   timeframe = "30d",
   startDate = "2026-07-09",
@@ -35,10 +37,10 @@ export default function ResolutionRateChart({
 
   const mockMetrics = getMetricsForDateRange(startDate, endDate);
   
-  let barData = mockMetrics.barData;
+  let barData = preAggregatedData || mockMetrics.barData;
   let resRateStr = mockMetrics.resRateStr;
   
-  if (reports.length > 0) {
+  if (reports.length > 0 && !preAggregatedData) {
     const total = reports.length;
     const resolvedCount = reports.filter(r => r.status === "resolved").length;
     const resRate = total > 0 ? ((resolvedCount / total) * 100).toFixed(1) : "0.0";

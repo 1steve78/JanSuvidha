@@ -27,8 +27,8 @@ export default function ResultsSummary({
   return (
     <div className="relative rounded-3xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 p-6 sm:p-10 text-white overflow-hidden">
       {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-indigo-500/10 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/20 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-emerald-500/10 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 space-y-6">
         {/* Top Row */}

@@ -37,7 +37,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import AdminSidebar from "@/components/admin/AdminSidebar";
 import StatsBand from "@/components/dashboard/StatsBand";
 import CategoryDonutChart from "@/components/dashboard/CategoryDonutChart";
 import ResolutionRateChart from "@/components/dashboard/ResolutionRateChart";
@@ -740,6 +739,20 @@ export default function DashboardPage() {
   // Admin Dashboard State
   const [timeframe, setTimeframe] = useState<string>("30d");
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [metricsData, setMetricsData] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadMetrics() {
+      let days = undefined;
+      if (timeframe === "7d") days = 7;
+      else if (timeframe === "30d") days = 30;
+      else if (timeframe === "90d") days = 90;
+      
+      const data = await api.getPublicDashboardMetrics(days);
+      if (data) setMetricsData(data);
+    }
+    loadMetrics();
+  }, [timeframe]);
   
   const getTodayStr = () => {
     const d = new Date();
@@ -853,52 +866,11 @@ export default function DashboardPage() {
     );
   }
 
-  const urgentPriorityItems = dbReports.filter((r) => r.escalated === true);
-
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[#F8FBFF] text-slate-900">
-      {/* Left Sidebar navigation */}
-      <AdminSidebar />
-
-      {/* Main Content Area */}
+    <div className="flex flex-col min-h-screen bg-[#F8FBFF] text-slate-900">
+      {/* Main Content Area — pt-[72px] offsets the fixed global header */}
       <div className="flex-1 min-w-0 flex flex-col relative overflow-x-hidden">
         
-        {/* Top Header Strip */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="border-b border-[#E4ECF8] bg-white/85 backdrop-blur-md sticky top-0 z-30"
-        >
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-sm text-slate-900">JanSuvidha</span>
-              <div className="h-4 w-px bg-slate-200" />
-              <span className="text-xs text-slate-500 font-medium">
-                {isAdmin ? "Admin Analytics & Telemetry" : "Secure Administration Portal"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs font-bold">System Secure</span>
-              </div>
-              {isAdmin && (
-                <button
-                  onClick={() => handleAdminToggle(false)}
-                  className="flex items-center gap-1 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1 rounded-full transition-colors"
-                >
-                  <Lock className="w-3 h-3" />
-                  <span>Lock Portal</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </motion.div>
-
         {!isAdmin ? (
           /* ─────────── NON-ADMIN SECURE ADMINISTRATION PORTAL ─────────── */
           <div className="relative flex-grow flex flex-col justify-between">
@@ -1133,102 +1105,12 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats Summary Cards */}
-            <StatsBand timeframe={timeframe} startDate={startDate} endDate={endDate} />
+            <StatsBand timeframe={timeframe} startDate={startDate} endDate={endDate} preAggregatedData={metricsData} />
 
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <CategoryDonutChart timeframe={timeframe} startDate={startDate} endDate={endDate} />
-              <ResolutionRateChart timeframe={timeframe} startDate={startDate} endDate={endDate} />
-            </div>
-
-            {/* Urgent Priority Queue Table */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs group hover:border-indigo-300 transition-all">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-3 border-b border-slate-100">
-                <div>
-                  <Link href="/admin/priority" className="inline-flex items-center gap-2 group-hover:text-indigo-600 transition-colors">
-                    <AlertTriangle className="w-5 h-5 text-amber-500" />
-                    <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight group-hover:text-indigo-600">
-                      Urgent Action Queue (Admin Priority)
-                    </h3>
-                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    View and manage high priority escalated grievances requiring officer action.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold bg-amber-50 text-amber-800 px-3 py-1 rounded-full border border-amber-200/80">
-                    {urgentPriorityItems.length} Urgent in DB
-                  </span>
-
-                  <Link
-                    href="/admin/priority"
-                    className="inline-flex items-center gap-1.5 text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl transition-all shadow-xs"
-                  >
-                    <span>Open Priority Page</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-
-              {urgentPriorityItems.length === 0 ? (
-                <div className="p-8 text-center bg-slate-50/60 rounded-xl border border-dashed border-slate-200 space-y-3">
-                  <div className="mx-auto w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center border border-slate-200">
-                    <Inbox className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-800">
-                      No Urgent Priority Records Found in Database
-                    </p>
-                    <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
-                      Only real records from your database are rendered.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 text-slate-600 uppercase tracking-wider font-extrabold">
-                      <tr>
-                        <th className="p-3 rounded-l-xl">Report ID</th>
-                        <th className="p-3">Category</th>
-                        <th className="p-3">Description</th>
-                        <th className="p-3">Location</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3 rounded-r-xl text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 text-slate-700">
-                      {urgentPriorityItems.slice(0, 5).map((item) => (
-                        <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                          <td className="p-3 font-mono font-bold text-indigo-600">{item.id}</td>
-                          <td className="p-3">
-                            <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                              {item.category}
-                            </span>
-                          </td>
-                          <td className="p-3 max-w-xs truncate font-medium">{item.description}</td>
-                          <td className="p-3 font-medium">{item.location}</td>
-                          <td className="p-3">
-                            <span className="inline-flex items-center gap-1 text-amber-700 font-bold">
-                              <Clock className="w-3.5 h-3.5" /> {item.status}
-                            </span>
-                          </td>
-                          <td className="p-3 text-right">
-                            <Link
-                              href="/admin/priority"
-                              className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg border border-indigo-200/60 transition-all inline-block"
-                            >
-                              Manage Priority
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+              <CategoryDonutChart timeframe={timeframe} startDate={startDate} endDate={endDate} preAggregatedData={metricsData?.categoryData} />
+              <ResolutionRateChart timeframe={timeframe} startDate={startDate} endDate={endDate} preAggregatedData={metricsData?.barData} />
             </div>
           </div>
         )}

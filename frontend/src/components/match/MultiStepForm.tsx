@@ -130,22 +130,22 @@ export default function MultiStepForm() {
   return (
     <section className="relative min-h-screen landing-page-grid py-10 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Decorative ambient backdrop glow matching Landing Page */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/3 left-10 w-80 h-80 bg-emerald-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Page Header matching Hero & Landing Page style */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           {/* Top pill badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 landing-shadow-sm">
-            <Cpu className="w-3.5 h-3.5 text-blue-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-semibold tracking-wide border border-emerald-200/60 landing-shadow-sm">
+            <Cpu className="w-3.5 h-3.5 text-[#65a30d]" />
             <span>AI-Powered Scheme Eligibility Matcher</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">
             Discover Government Schemes You’re{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-800 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#65a30d] to-emerald-700 bg-clip-text text-transparent">
               Qualified For.
             </span>
           </h1>
@@ -157,16 +157,16 @@ export default function MultiStepForm() {
 
         {/* 3-Step Visual Process Bar */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-medium text-slate-600 bg-white/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 1 ? "bg-blue-50 text-blue-900 border border-blue-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
-            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 1 ? "bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-[#65a30d] text-white flex items-center justify-center text-xs">1</span>
             <span>Enter Income & Assets</span>
           </div>
-          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 2 ? "bg-indigo-50 text-indigo-900 border border-indigo-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
-            <span className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">2</span>
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 2 ? "bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-[#65a30d] text-white flex items-center justify-center text-xs">2</span>
             <span>State & Occupation</span>
           </div>
-          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 3 ? "bg-purple-50 text-purple-900 border border-purple-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
-            <span className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs">3</span>
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 3 ? "bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-[#65a30d] text-white flex items-center justify-center text-xs">3</span>
             <span>Demographics & Match</span>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function MultiStepForm() {
         {/* Main Glassmorphic Card Container */}
         <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden">
           {/* Gradient Top Accent Bar */}
-          <div className="h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+          <div className="h-1.5 bg-gradient-to-r from-amber-500 via-[#65a30d] to-emerald-700" />
 
           <div className="p-6 sm:p-10">
             <StepProgressBar
@@ -216,7 +216,7 @@ export default function MultiStepForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white landing-shadow-md hover:scale-[1.02] transition-all duration-200"
+                  className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-emerald-800 text-white landing-shadow-md hover:scale-[1.02] transition-all duration-200"
                 >
                   <span>Continue to Step {currentStep + 1}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -226,7 +226,7 @@ export default function MultiStepForm() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white landing-shadow-lg hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:hover:scale-100"
+                  className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-gradient-to-r from-amber-500 via-[#65a30d] to-emerald-700 hover:from-amber-600 hover:to-emerald-800 text-white landing-shadow-lg hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

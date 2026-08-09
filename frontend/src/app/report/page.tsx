@@ -9,12 +9,15 @@ export const metadata: Metadata = {
 
 export default function ReportPage() {
   return (
-    <div className="relative overflow-hidden landing-page-grid min-h-screen pt-8 pb-20">
-      {/* Decorative backdrop glows matching Landing Page Hero */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+    <div className="relative min-h-screen bg-white pb-20">
+      {/* Gradient background matching site hero style */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 0% 0%, rgba(255,185,50,0.15) 0%, transparent 55%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(30,160,30,0.12) 0%, transparent 55%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.06) 0%, transparent 60%)" }} />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
         <ReportForm />
       </div>
     </div>

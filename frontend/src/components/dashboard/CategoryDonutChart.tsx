@@ -23,6 +23,7 @@ const CATEGORY_COLOR_MAP: Record<string, string> = {
 };
 
 interface CategoryDonutChartProps {
+  preAggregatedData?: any[];
   reports?: any[];
   timeframe?: string;
   startDate?: string;
@@ -30,6 +31,7 @@ interface CategoryDonutChartProps {
 }
 
 export default function CategoryDonutChart({
+  preAggregatedData,
   reports = [],
   timeframe = "30d",
   startDate = "2026-07-09",
@@ -44,10 +46,10 @@ export default function CategoryDonutChart({
 
   const mockMetrics = getMetricsForDateRange(startDate, endDate);
   
-  let categoryData = mockMetrics.categoryData;
+  let categoryData = preAggregatedData || mockMetrics.categoryData;
   let totalReports = mockMetrics.total;
 
-  if (reports.length > 0) {
+  if (reports.length > 0 && !preAggregatedData) {
     totalReports = reports.length;
     const counts: Record<string, number> = {};
     reports.forEach(r => {

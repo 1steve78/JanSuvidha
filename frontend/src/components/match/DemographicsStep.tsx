@@ -8,23 +8,23 @@ interface DemographicsStepProps {
 }
 
 const selectClass =
-  "w-full px-4 py-3 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all duration-200 text-slate-800 appearance-none cursor-pointer";
+  "w-full px-4 py-3 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all duration-200 text-slate-800 appearance-none cursor-pointer";
 
 export default function DemographicsStep({ formData, updateForm }: DemographicsStepProps) {
   return (
     <div className="space-y-6">
       {/* Step Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 p-6 text-white landing-shadow-md">
+      <div className="rounded-2xl bg-gradient-to-r from-amber-500 via-[#65a30d] to-emerald-700 p-6 text-white landing-shadow-md">
         <div className="flex items-center gap-3.5 mb-2">
           <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shrink-0 border border-white/30">
             <Users className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-xl font-extrabold tracking-tight">Step 3: Demographics &amp; Family Profile</h2>
-            <p className="text-xs text-purple-100 font-medium">Targeted benefit allocation &amp; affirmative action matching</p>
+            <p className="text-xs text-emerald-100 font-medium">Targeted benefit allocation &amp; affirmative action matching</p>
           </div>
         </div>
-        <p className="text-xs text-purple-100 leading-relaxed mt-2 pl-0.5">
+        <p className="text-xs text-emerald-100 leading-relaxed mt-2 pl-0.5">
           Demographic attributes unlock targeted social security programs, maternity aid, senior pensions, and affirmative action quotas.
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function DemographicsStep({ formData, updateForm }: DemographicsS
         <div className="space-y-2">
           <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
             <span>Social Category</span>
-            <Shield className="w-3.5 h-3.5 text-indigo-500" />
+            <Shield className="w-3.5 h-3.5 text-emerald-500" />
           </label>
           <div className="relative">
             <select

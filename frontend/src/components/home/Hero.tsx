@@ -2,109 +2,55 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Search, ShieldAlert, Sparkles, CheckCircle2 } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-transparent pt-8 pb-16 lg:py-20">
-      {/* Decorative backdrop glow */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Left Column: Headline & Action */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            
-            {/* Top pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 landing-shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-              <span>Unified Welfare & Grievance Redressal Platform</span>
-            </div>
+    <section className="relative overflow-hidden bg-white flex flex-col items-center w-full h-full">
+      {/* Indian tricolour gradient splash — top corners */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 0% 0%, rgba(255,185,50,0.35) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(30,160,30,0.25) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.6) 40%, #ffffff 90%)" }} />
+      </div>
 
-            {/* Main Headline matching user requirement & image */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
-              Every Citizen Deserves Access to What{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-800 bg-clip-text text-transparent">
-                They’re Owed.
-              </span>
-            </h1>
-
-            {/* Subhead */}
-            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl font-normal leading-relaxed">
-              Discover welfare schemes you qualify for, report public issues, and track every request — all in one place.
-            </p>
-
-            {/* Dual Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <Link
-                href="/match"
-                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl landing-shadow-md landing-shadow-md-hover transition-all flex items-center justify-center gap-2.5 text-base group"
-              >
-                <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                <span>Find My Schemes</span>
-              </Link>
-
-              <Link
-                href="/report"
-                className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-7 py-3.5 rounded-xl border border-slate-300 landing-shadow-sm landing-shadow-sm-hover hover:border-slate-400 transition-all flex items-center justify-center gap-2.5 text-base"
-              >
-                <ShieldAlert className="w-5 h-5 text-emerald-600" />
-                <span>Grievance Redressal</span>
-              </Link>
-            </div>
-
-            {/* Key trust bullets */}
-            <div className="pt-4 flex flex-wrap items-center gap-6 text-sm text-slate-600 font-medium">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>100% Free & Secure</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>ML-Powered Matcher</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Anonymous Geotagged Reporting</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Column: Hero Image of Rural Community */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              
-              {/* Image Frame */}
-              <div className="relative rounded-3xl overflow-hidden landing-shadow-xl border-4 border-white bg-white group">
-                <Image
-                  src="/images/hero_family.jpg"
-                  alt="Happy rural Indian family using digital tablet for welfare scheme access"
-                  width={600}
-                  height={450}
-                  className="w-full h-[360px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none" />
-                
-                {/* Floating Overlay Badge on Hero image */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-white/60 landing-shadow-lg flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Direct Empowerment</div>
-                    <div className="text-sm font-bold text-slate-900">Empowering 12,000+ rural households nationwide</div>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-
+      {/* Text content */}
+      <div
+        className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative w-full flex flex-col items-center pt-8 lg:pt-12 pb-6"
+        style={{ zIndex: 1 }}
+      >
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.08] mb-5">
+          Claim your rights,<br />build your future
+        </h1>
+        <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed mb-9">
+          Take control of your civic life by discovering welfare schemes you qualify for and ensuring your grievances are heard securely.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/match"
+            className="w-full sm:w-auto bg-white text-slate-700 font-medium px-8 py-3.5 rounded-xl border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all text-base shadow-sm"
+          >
+            Browse Schemes
+          </Link>
+          <Link
+            href="/report"
+            className="w-full sm:w-auto bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-medium px-8 py-3.5 rounded-xl shadow-sm hover:shadow-md transition-all text-base"
+          >
+            Report Grievance
+          </Link>
         </div>
+      </div>
+
+      {/* Illustration — fills remaining height */}
+      <div className="w-full relative flex-1 overflow-hidden flex justify-center" style={{ zIndex: 1 }}>
+        <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-white to-transparent z-10" />
+        <Image
+          src="/images/welfare_illustration.jpg"
+          alt="Public welfare community illustration"
+          width={1200}
+          height={420}
+          className="w-full max-w-5xl h-full object-contain object-bottom mix-blend-darken"
+          priority
+        />
       </div>
     </section>
   );

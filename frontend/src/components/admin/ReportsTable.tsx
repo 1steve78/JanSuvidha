@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { api } from "@/lib/api";
+import { useAdminReports } from "@/hooks/useAdminReports";
 import { GrievanceReport } from "@/lib/reports";
 import StatusDropdown from "./StatusDropdown";
 import {
@@ -36,36 +37,28 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
   const [newLoc, setNewLoc] = useState("");
   const [newPriority, setNewPriority] = useState<GrievanceReport["priority"]>("Urgent");
 
-  const loadReports = async () => {
-    const token = localStorage.getItem("jan_suvidha_admin_auth_token");
-    if (token) {
-      try {
-        const data = await api.getAdminReports(token);
-        const mappedData = data.map((r: any) => {
-          const assignLog = r.status_logs?.slice().reverse().find((l: any) => l.officer_note?.startsWith("Assigned to:"));
-          const assignedOfficer = assignLog ? assignLog.officer_note.replace("Assigned to: ", "") : null;
-          return {
-            ...r,
-            assignedOfficer
-          };
-        });
-        setReports(mappedData);
-      } catch (err) {
-        console.error("Failed to load reports", err);
-      }
-    }
-  };
+  const { reports: fetchedReports, loading, refetch: loadReports } = useAdminReports();
 
   useEffect(() => {
     setMounted(true);
-    loadReports();
   }, []);
+
+  useEffect(() => {
+    if (fetchedReports) {
+      // Cast the hook's returned AdminReport[] to GrievanceReport[] since they align
+      setReports(fetchedReports as any as GrievanceReport[]);
+    }
+  }, [fetchedReports]);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     const token = localStorage.getItem("jan_suvidha_admin_auth_token");
     if (token) {
       try {
-        await api.updateReportStatus(id, { status: newStatus.toLowerCase().replace(" ", "_") }, token);
+        if (newStatus === "Escalated") {
+          await api.updateReportStatus(id, { escalated: true }, token);
+        } else {
+          await api.updateReportStatus(id, { status: newStatus.toLowerCase().replace(" ", "_") }, token);
+        }
         loadReports();
       } catch (err) {
         console.error("Failed to update status", err);
@@ -169,11 +162,6 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
               {filtered.length} {filtered.length === 1 ? "Record" : "Records"}
             </span>
           </div>
-          <p className="text-xs text-slate-500 font-medium">
-            {priorityOnly
-              ? "High and urgent priority issues requiring immediate officer assignment or status escalation."
-              : "Complete inventory of user-submitted grievances connected to database."}
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -253,7 +241,7 @@ export default function ReportsTable({ priorityOnly = false }: ReportsTableProps
 
           <div className="max-w-md mx-auto space-y-1.5">
             <h3 className="text-base font-extrabold text-slate-900">
-              No Priority Records Found in Database
+              {priorityOnly ? "No Priority Records Found in Database" : "No Grievance Records Found in Database"}
             </h3>
             <p className="text-xs text-slate-500 leading-relaxed">
               No random mock data is added automatically. Real records will populate here as soon as citizens submit grievances or when your database is connected.

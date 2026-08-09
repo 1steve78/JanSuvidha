@@ -89,14 +89,14 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
     <div className="w-full max-w-3xl mx-auto space-y-8">
       {/* Top Page Header matching Landing Page & Grievance Redressal Hero style */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 landing-shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 text-slate-800 text-xs font-semibold tracking-wide border border-slate-200/60 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-[#65a30d]" />
           <span>Live Grievance Redressal Tracker</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">
           Track Resolution Status With{" "}
-          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-800 bg-clip-text text-transparent">
+          <span className="text-[#65a30d]">
             Real-Time Telemetry.
           </span>
         </h1>
@@ -107,25 +107,25 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
       </div>
 
       {/* Trust Highlights Bar matching Landing Page & Grievance Redressal Trust Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-medium text-slate-600 bg-white/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-200/80 shadow-xs">
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-blue-50/80 text-blue-900 border border-blue-100 font-bold">
-          <Clock className="w-4 h-4 text-blue-600 shrink-0" />
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs font-medium text-slate-600">
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-200 shadow-sm">
+          <Clock className="w-4 h-4 text-[#65a30d] shrink-0" />
           <span>Instant Live Status Audit</span>
         </div>
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-indigo-50/80 text-indigo-900 border border-indigo-100 font-bold">
-          <Lock className="w-4 h-4 text-indigo-600 shrink-0" />
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-200 shadow-sm">
+          <Lock className="w-4 h-4 text-[#65a30d] shrink-0" />
           <span>Cryptographic Hash Integrity</span>
         </div>
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-emerald-50/80 text-emerald-900 border border-emerald-100 font-bold">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-200 shadow-sm">
+          <ShieldCheck className="w-4 h-4 text-[#65a30d] shrink-0" />
           <span>Verified Government SLA Targets</span>
         </div>
       </div>
 
       {/* Search Input Card Container */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden">
+      <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden mt-6">
         {/* Gradient Top Accent Bar */}
-        <div className="h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+        <div className="h-1.5 bg-gradient-to-r from-[#84cc16] via-[#65a30d] to-[#4d7c0f]" />
 
         <div className="p-6 sm:p-8 space-y-4">
           <label htmlFor="track-id-input" className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
@@ -147,7 +147,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
 
             <button
               type="submit"
-              className="px-7 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-extrabold rounded-2xl transition-all landing-shadow-md flex items-center justify-center gap-2 shrink-0"
+              className="px-7 py-3.5 bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white text-xs font-extrabold rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 shrink-0"
             >
               <span>Audit Status</span>
               <Search className="w-4 h-4" />
@@ -157,7 +157,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
           {/* Quick Sample Presets */}
           <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100">
             <span className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-blue-500" /> Sample ID:
+              <Sparkles className="w-3 h-3 text-[#65a30d]" /> Sample ID:
             </span>
             {samplePresets.map((preset) => (
               <button
@@ -169,7 +169,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
                 }}
                 className={`text-[11px] font-mono px-3 py-1 rounded-lg border transition-all ${
                   displayId === preset.id
-                    ? "bg-blue-50 border-blue-300 text-blue-700 font-bold"
+                    ? "bg-[#65a30d]/10 border-[#65a30d]/30 text-[#4d7c0f] font-bold"
                     : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -181,9 +181,10 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
       </div>
 
       {/* Main Timeline Results Container */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden">
+      {displayId && (
+        <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden">
         {/* Banner Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-800 p-6 text-white relative">
+        <div className="bg-gradient-to-r from-[#84cc16] via-[#65a30d] to-[#4d7c0f] p-6 text-white relative">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold border border-white/30">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
@@ -214,7 +215,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-bold rounded-xl transition-all shadow-xs shrink-0 ${
                   copied
                     ? "bg-emerald-500 text-white"
-                    : "bg-white text-blue-900 hover:bg-blue-50"
+                    : "bg-white text-slate-900 hover:bg-slate-50"
                 }`}
               >
                 {copied ? (
@@ -223,7 +224,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3.5 h-3.5 text-blue-600" /> Copy ID
+                    <Copy className="w-3.5 h-3.5 text-slate-600" /> Copy ID
                   </>
                 )}
               </button>
@@ -235,7 +236,7 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
         <div className="p-6 sm:p-8 space-y-6">
           {isLoading ? (
             <div className="py-20 flex flex-col items-center justify-center space-y-4">
-              <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
+              <RefreshCw className="w-8 h-8 text-[#65a30d] animate-spin" />
               <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Fetching live report status...</p>
             </div>
           ) : error || !reportData ? (
@@ -251,15 +252,15 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
           ) : (
             <>
               {/* Category Summary Header Badge */}
-              <div className="p-4 bg-blue-50/70 rounded-2xl border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-600 text-white shadow-xs">
+                  <div className="p-2.5 rounded-xl bg-[#65a30d] text-white shadow-xs">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div>
                     <p className="font-extrabold text-slate-900 capitalize">Category: {reportData.category.replace("_", " ")}</p>
                     <p className="text-slate-500 font-medium flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-blue-600" /> {reportData.location || "Location not specified"}
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" /> {reportData.location || "Location not specified"}
                     </p>
                   </div>
                 </div>
@@ -295,8 +296,8 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
                         )}
                         {isCurrent && (
                           <div className="relative flex items-center justify-center">
-                            <span className="absolute w-9 h-9 rounded-full bg-blue-500/30 animate-ping" />
-                            <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white font-bold text-xs ring-4 ring-blue-100">
+                            <span className="absolute w-9 h-9 rounded-full bg-[#65a30d]/30 animate-ping" />
+                            <div className="w-7 h-7 rounded-full bg-[#65a30d] text-white flex items-center justify-center shadow-lg border-2 border-white font-bold text-xs ring-4 ring-[#65a30d]/20">
                               <Clock className="w-4 h-4 stroke-[2.5]" />
                             </div>
                           </div>
@@ -306,12 +307,12 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
                       <div
                         className={`flex-1 p-4.5 rounded-2xl border transition-all duration-200 ${
                           isCurrent
-                            ? "bg-blue-50/70 border-blue-200 shadow-xs ring-1 ring-blue-300"
+                            ? "bg-slate-50 border-[#65a30d]/20 shadow-xs ring-1 ring-[#65a30d]/20"
                             : "bg-slate-50/60 border-slate-200/80"
                         }`}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                          <h3 className={`text-base font-extrabold capitalize ${isCurrent ? "text-blue-900" : "text-slate-900"}`}>
+                          <h3 className={`text-base font-extrabold capitalize ${isCurrent ? "text-slate-900" : "text-slate-900"}`}>
                             {log.status.replace("_", " ")}
                           </h3>
                           <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
@@ -347,13 +348,14 @@ export default function StatusTimeline({ reportId }: StatusTimelineProps) {
 
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all landing-shadow-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-bold rounded-xl transition-all shadow-sm"
             >
               View Public Transparency Dashboard
             </Link>
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

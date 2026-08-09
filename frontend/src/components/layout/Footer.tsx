@@ -1,177 +1,112 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Link from "next/link";
-import {
-  Shield,
-  Lock,
-  Scale,
-  ArrowRight,
-  Phone,
-  FileWarning,
-  ChevronRight,
-} from "lucide-react";
-import FooterScene from "./footer/FooterScene";
-
-const REPORT_CATEGORIES = [
-  { label: "Crime", href: "/report?category=crime" },
-  { label: "Corruption", href: "/report?category=corruption" },
-  { label: "Harassment", href: "/report?category=harassment" },
-  { label: "Cyber Crime", href: "/report?category=cyber" },
-  { label: "Domestic Violence", href: "/report?category=domestic" },
-  { label: "Public Safety", href: "/report?category=safety" },
-  { label: "Fraud", href: "/report?category=fraud" },
-];
-
-const QUICK_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Report Now", href: "/report" },
-  { label: "Track Complaint", href: "/track" },
-  { label: "Emergency Contacts", href: "#emergency" },
-  { label: "FAQs", href: "#faq" },
-  { label: "Privacy Policy", href: "#privacy" },
-  { label: "Terms", href: "#terms" },
-];
-
-const TRUST_CARDS = [
-  { icon: Shield, label: "Anonymous Reporting", emoji: "🛡" },
-  { icon: Lock, label: "End-to-End Privacy", emoji: "🔒" },
-  { icon: Scale, label: "Trusted Process", emoji: "⚖" },
-];
+import Image from "next/image";
+import { Mail, ArrowUp } from "lucide-react";
 
 export default function Footer() {
-  const footerRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [pulseActive, setPulseActive] = useState(false);
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  useEffect(() => {
-    const el = footerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.08 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    const interval = setInterval(() => {
-      setPulseActive(true);
-      setTimeout(() => setPulseActive(false), 2000);
-    }, 7000);
-
-    const initial = setTimeout(() => {
-      setPulseActive(true);
-      setTimeout(() => setPulseActive(false), 2000);
-    }, 3000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(initial);
-    };
-  }, [visible]);
 
   return (
-    <footer ref={footerRef} className={`premium-footer ${visible ? "premium-footer-visible" : ""}`}>
-      <FooterScene visible={visible} pulseActive={pulseActive} />
+    <footer className="w-full flex flex-col relative z-20 bg-white overflow-hidden">
+      
+      {/* Background Illustration */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <Image
+          src="/images/footer_lineart.jpg"
+          alt="Civic welfare background illustration"
+          fill
+          className="object-cover object-bottom mix-blend-darken opacity-30"
+          priority
+        />
+        {/* Optional gradient to ensure text readability if the image is too harsh */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/70 to-white/95" />
+      </div>
 
-      <div className="premium-footer-content">
-        <div className="premium-footer-grid">
-          {/* Column 1 — Brand */}
-          <div className="footer-col footer-col-brand">
-            <Link href="/" className="footer-logo">
-              <div className="footer-logo-icon">
-                <Shield className="w-5 h-5" />
-              </div>
-              <span className="footer-logo-text">SecureReport</span>
-            </Link>
-            <p className="footer-mission">
-              Empowering citizens to report crimes, corruption, harassment, cyber abuse, and
-              misconduct safely and anonymously.
-            </p>
+      {/* Ultra-Minimalist Footer Body */}
+      <div className="w-full relative z-10 px-6 sm:px-12 pt-12 pb-12 sm:pt-16 sm:pb-16 max-w-[1600px] mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12 sm:mb-16">
+          
+          {/* Left Side: Headline & Subscribe */}
+          <div className="max-w-md w-full">
+            <h2 className="text-4xl sm:text-5xl font-medium tracking-tight text-slate-900 leading-[1.1] mb-8">
+              Stay in the loop with<br />our latest updates
+            </h2>
+            
+            <form 
+              onSubmit={(e) => e.preventDefault()}
+              className="flex items-center gap-2 border border-slate-300 rounded-full px-5 py-3 max-w-xs hover:border-slate-400 transition-colors bg-white/50 backdrop-blur-sm"
+            >
+              <input 
+                type="email" 
+                placeholder="Subscribe" 
+                className="bg-transparent outline-none w-full text-sm placeholder-slate-500 text-slate-900" 
+                required
+              />
+              <button type="submit" aria-label="Subscribe" className="shrink-0 hover:scale-110 transition-transform">
+                <Mail className="w-4 h-4 text-slate-900" />
+              </button>
+            </form>
           </div>
 
-          {/* Column 2 — Report Categories */}
-          <div className="footer-col">
-            <h3 className="footer-col-title">Report Categories</h3>
-            <ul className="footer-link-list">
-              {REPORT_CATEGORIES.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="footer-category-link">
-                    <span>{item.label}</span>
-                    <ArrowRight className="footer-arrow" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Right Side: Back to top */}
+          <button 
+            onClick={scrollToTop} 
+            className="flex items-center gap-1.5 text-xs font-medium text-slate-900 hover:text-slate-600 transition-colors bg-white/40 px-3 py-1.5 rounded-full backdrop-blur-sm border border-slate-200/50"
+          >
+            Back To Top <ArrowUp className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
-          {/* Column 3 — Quick Links */}
-          <div className="footer-col">
-            <h3 className="footer-col-title">Quick Links</h3>
-            <ul className="footer-link-list">
-              {QUICK_LINKS.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="footer-quick-link">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 4 — Emergency */}
-          <div className="footer-col footer-col-emergency" id="emergency">
-            <h3 className="footer-emergency-title">Need Immediate Help?</h3>
-            <div className="footer-emergency-buttons">
-              <a href="tel:112" className="footer-btn footer-btn-emergency">
-                <Phone className="w-4 h-4" />
-                <span>Emergency: 112</span>
-              </a>
-              <Link href="/report" className="footer-btn footer-btn-report">
-                <FileWarning className="w-4 h-4" />
-                <span>Report Anonymously</span>
-                <ChevronRight className="w-4 h-4 footer-btn-chevron" />
-              </Link>
+        {/* Grid of Links & Info */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 mb-10 text-xs text-slate-900 font-medium">
+          
+          {/* Column 1: Headquarters */}
+          <div>
+            <div className="mb-1 text-slate-900">New Delhi</div>
+            <div className="text-slate-600 mb-2">T: (+91) 11 2345 6789</div>
+            <div className="text-slate-600 leading-relaxed">
+              12 Sansad Marg,<br />
+              New Delhi 110001, India
             </div>
+          </div>
+
+          {/* Column 2: Regional Office */}
+          <div>
+            <div className="mb-1 text-slate-900">Mumbai</div>
+            <div className="text-slate-600 mb-2">T: (+91) 22 9876 5432</div>
+            <div className="text-slate-600 leading-relaxed">
+              45 Nariman Point,<br />
+              Mumbai 400021, India
+            </div>
+          </div>
+
+          {/* Column 3: Quick Links */}
+          <div className="flex flex-col gap-2 text-slate-600">
+            <Link href="/match" className="hover:text-slate-900 transition-colors">Find Schemes</Link>
+            <Link href="/report" className="hover:text-slate-900 transition-colors">Report Issue</Link>
+            <Link href="/track" className="hover:text-slate-900 transition-colors">Track Status</Link>
+          </div>
+
+          {/* Column 4: Socials */}
+          <div className="flex flex-col gap-2 text-slate-600">
+            <a href="#" className="hover:text-slate-900 transition-colors">Instagram</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Twitter (X)</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">YouTube</a>
           </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="footer-trust-row">
-          {TRUST_CARDS.map((card) => (
-            <div key={card.label} className="footer-trust-card">
-              <span className="footer-trust-emoji" aria-hidden="true">{card.emoji}</span>
-              <span className="footer-trust-label">{card.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Strip */}
-        <div className="footer-bottom-strip">
-          <div className="footer-heartbeat-line">
-            <div className="footer-heartbeat-pulse" />
-          </div>
-          <div className="footer-bottom-content">
-            <p className="footer-copyright">
-              © 2026 Anonymous Grievance Reporting Platform
-            </p>
-            <p className="footer-tagline">
-              Your Voice Matters • Your Identity Stays Protected
-            </p>
-          </div>
+        {/* Bottom copyright line */}
+        <div className="pt-6 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-[11px] text-slate-500 font-medium tracking-wide">
+          <div>All Rights Reserved - Copyright © 2026 JanSuvidha</div>
+          <Link href="#privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link>
         </div>
       </div>
     </footer>
   );
+
 }

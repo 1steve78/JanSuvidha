@@ -26,8 +26,8 @@ export default function MatchResultsPage() {
   return (
     <div className="relative min-h-screen landing-page-grid py-10 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Decorative ambient backdrop glow matching Landing Page */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/3 left-10 w-80 h-80 bg-emerald-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-10">
         {/* Results Banner Header */}
@@ -41,7 +41,7 @@ export default function MatchResultsPage() {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200/80 pb-4">
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-indigo-600" />
+              <Sparkles className="w-5 h-5 text-[#65a30d]" />
               <span>Ranked Scheme Recommendations ({filteredSchemes.length})</span>
             </h2>
             <span className="text-xs text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
@@ -68,7 +68,7 @@ export default function MatchResultsPage() {
               </p>
               <button
                 onClick={() => setActiveCategory("all")}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all landing-shadow-sm"
+                className="px-6 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white rounded-xl text-xs font-bold transition-all landing-shadow-sm"
               >
                 Show All Eligible Schemes
               </button>
@@ -78,7 +78,7 @@ export default function MatchResultsPage() {
 
         {/* Bottom Navigation */}
         <div className="pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-          <Link href="/match" className="font-bold text-indigo-600 hover:underline flex items-center gap-1.5">
+          <Link href="/match" className="font-bold text-[#65a30d] hover:underline flex items-center gap-1.5">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Recalculate Profile Inputs</span>
           </Link>
