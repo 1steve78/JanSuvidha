@@ -801,8 +801,8 @@ export default function DashboardPage() {
 
     try {
       const result = await api.adminLogin(username.trim(), password.trim());
-      if (result?.token) {
-        localStorage.setItem("jan_suvidha_admin_auth_token", result.token);
+      if (result?.access_token) {
+        localStorage.setItem("jan_suvidha_admin_auth_token", result.access_token);
         localStorage.setItem("jan_suvidha_admin_user", username.trim());
         if (rememberDevice) localStorage.setItem("jan_suvidha_admin_remember", "true");
         setIsAdmin(true);

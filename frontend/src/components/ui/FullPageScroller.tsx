@@ -143,14 +143,14 @@ export default function FullPageScroller({ children }: { children: ReactNode }) 
       accumulatedDelta += e.deltaY;
       
       // Threshold check: ignore tiny rubber-band bounces or the very weak tail-end of inertia
-      if (Math.abs(accumulatedDelta) < 60) {
+      if (Math.abs(accumulatedDelta) < 30) {
         return;
       }
       
       const dir = accumulatedDelta > 0 ? 1 : -1;
       
       cooldown = true;
-      setTimeout(() => { cooldown = false; }, 1200);
+      setTimeout(() => { cooldown = false; }, 900);
       accumulatedDelta = 0; // Reset after triggering
       
       goTo(cur.current + dir, dir as 1 | -1);

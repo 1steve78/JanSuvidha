@@ -15,12 +15,11 @@ export default function AdminNavbar() {
 
   const handleAdminToggle = (state: boolean) => {
     if (typeof window !== "undefined") {
-      if (state) {
-        localStorage.setItem("jan_suvidha_admin_auth", "true");
-        window.location.reload();
-      } else {
-        localStorage.removeItem("jan_suvidha_admin_auth");
-        window.location.href = "/dashboard";
+      if (!state) {
+        localStorage.removeItem("jan_suvidha_admin_auth_token");
+        localStorage.removeItem("jan_suvidha_admin_user");
+        localStorage.removeItem("jan_suvidha_admin_remember");
+        window.location.href = "/admin/login";
       }
     }
   };

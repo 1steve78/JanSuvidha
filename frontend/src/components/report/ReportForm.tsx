@@ -14,17 +14,12 @@ export default function ReportForm() {
   const [selectedCategory, setSelectedCategory] = useState<ReportCategory | null>(null);
   const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
-  const [location, setLocation] = useState<LocationData>({
-    lat: 28.6139,
-    lng: 77.209,
-    address: "Central District, Connaught Place, New Delhi",
-    isAutoDetected: false,
-  });
+  const [location, setLocation] = useState<LocationData | null>(null);
 
   const [isLocating, setIsLocating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState<SubmittedReportData | null>(null);
-  const [errors, setErrors] = useState<{ category?: string; description?: string }>({});
+  const [errors, setErrors] = useState<{ category?: string; description?: string; location?: string }>({});
 
   const handleCategorySelect = (cat: ReportCategory) => {
     setSelectedCategory(cat);
@@ -77,7 +72,7 @@ export default function ReportForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newErrors: { category?: string; description?: string } = {};
+    const newErrors: { category?: string; description?: string; location?: string } = {};
 
     if (!selectedCategory) {
       newErrors.category = "Please select one category (Harassment, Corruption, Civic Issue, or Safety).";
@@ -87,6 +82,10 @@ export default function ReportForm() {
       newErrors.description = "Please provide a brief description of the issue or incident.";
     } else if (description.trim().length < 15) {
       newErrors.description = "Description should be at least 15 characters long to ensure clear context.";
+    }
+
+    if (!location) {
+      newErrors.location = "Please detect your GPS location before submitting.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -100,9 +99,9 @@ export default function ReportForm() {
       const payload = {
         category: selectedCategory!.toLowerCase().replace(" ", "_"),
         description: description.trim(),
-        location: location.address,
-        lat: location.lat,
-        lng: location.lng,
+        location: location!.address,
+        lat: location!.lat,
+        lng: location!.lng,
       };
       
       const response = await api.submitReport(payload);
@@ -112,7 +111,7 @@ export default function ReportForm() {
         category: selectedCategory!,
         description: description.trim(),
         photoName: photo ? photo.name : undefined,
-        locationText: location.address,
+        locationText: location!.address,
         createdAt: new Date(response.created_at || Date.now()).toLocaleString("en-US", {
           dateStyle: "medium",
           timeStyle: "short",
@@ -239,6 +238,7 @@ export default function ReportForm() {
             location={location}
             onLocationDetect={handleLocationDetect}
             isLocating={isLocating}
+            error={errors.location}
           />
 
           {/* Informational Privacy Note */}

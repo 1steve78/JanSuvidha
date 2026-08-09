@@ -44,30 +44,29 @@ function BlueprintBackground() {
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#F8FBFF]">
-      {/* Animated grid */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{ backgroundPosition: ["0px 0px", "48px 48px"] }}
-        transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
-        }}
-      />
 
-      {/* Soft radial glow — upper center */}
+      {/* Soft radial glow — upper left (Green) */}
       <div
         className="absolute pointer-events-none"
         style={{
-          left: "50%",
+          left: "25%",
           top: "-10%",
           transform: "translateX(-50%)",
-          width: 900,
+          width: 800,
           height: 600,
-          background: "radial-gradient(ellipse at center, rgba(37,99,235,0.07) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at center, rgba(16,185,129,0.07) 0%, transparent 70%)",
+        }}
+      />
+      {/* Soft radial glow — upper right (Orange) */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: "75%",
+          top: "-10%",
+          transform: "translateX(-50%)",
+          width: 800,
+          height: 600,
+          background: "radial-gradient(ellipse at center, rgba(249,115,22,0.06) 0%, transparent 70%)",
         }}
       />
 
@@ -77,12 +76,12 @@ function BlueprintBackground() {
           <motion.div
             animate={{ scale: [1, 1.8, 1], opacity: [0.25, 0.55, 0.25] }}
             transition={{ duration: 3.5 + i * 0.6, repeat: Infinity, delay: i * 0.4 }}
-            className="w-2 h-2 rounded-full bg-blue-300"
+            className={`w-2 h-2 rounded-full ${i % 2 === 0 ? "bg-emerald-400" : "bg-orange-400"}`}
           />
           <motion.div
             animate={{ scale: [1, 3, 1], opacity: [0.08, 0.18, 0.08] }}
             transition={{ duration: 3.5 + i * 0.6, repeat: Infinity, delay: i * 0.4 }}
-            className="absolute inset-0 rounded-full bg-blue-400"
+            className={`absolute inset-0 rounded-full ${i % 2 === 0 ? "bg-emerald-500" : "bg-orange-500"}`}
           />
         </div>
       ))}
@@ -91,7 +90,7 @@ function BlueprintBackground() {
       {[...Array(14)].map((_, i) => (
         <motion.div
           key={`fp-${i}`}
-          className="absolute w-1 h-1 rounded-full bg-blue-400/25"
+          className={`absolute w-1 h-1 rounded-full ${i % 2 === 0 ? "bg-emerald-500/30" : "bg-orange-500/30"}`}
           style={{ left: `${5 + i * 6.5}%`, top: `${10 + (i % 5) * 18}%` }}
           animate={{ y: [0, -(12 + i * 2), 0], opacity: [0.1, 0.35, 0.1] }}
           transition={{ duration: 5 + i * 0.4, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }}
@@ -119,14 +118,14 @@ function AnimatedShield() {
       {/* Outermost radial glow */}
       <div
         className="absolute inset-0 rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(37,99,235,0.14) 0%, transparent 68%)" }}
+        style={{ background: "radial-gradient(circle, rgba(16,185,129,0.14) 0%, transparent 68%)" }}
       />
 
       {/* Concentric pulsing rings */}
       {[280, 230, 180].map((size, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full border border-blue-200/50"
+          className={`absolute rounded-full border ${i % 2 === 0 ? "border-emerald-200/50" : "border-orange-200/50"}`}
           style={{ width: size, height: size }}
           animate={{ scale: [1, 1.04, 1], opacity: [0.35, 0.65, 0.35] }}
           transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
@@ -141,7 +140,7 @@ function AnimatedShield() {
         style={{
           width: 230,
           height: 230,
-          border: "1.5px dashed rgba(37,99,235,0.35)",
+          border: "1.5px dashed rgba(16,185,129,0.35)",
         }}
       />
 
@@ -153,7 +152,7 @@ function AnimatedShield() {
         style={{
           width: 175,
           height: 175,
-          border: "1px dashed rgba(99,102,241,0.3)",
+          border: "1px dashed rgba(249,115,22,0.3)",
         }}
       />
 
@@ -179,11 +178,11 @@ function AnimatedShield() {
             style={{
               width: i % 2 === 0 ? 8 : 6,
               height: i % 2 === 0 ? 8 : 6,
-              background: i % 2 === 0 ? "#2563EB" : "#818CF8",
+              background: i % 2 === 0 ? "#10B981" : "#F97316",
               marginTop: -(i % 2 === 0 ? 4 : 3),
               boxShadow: i % 2 === 0
-                ? "0 0 8px rgba(37,99,235,0.7)"
-                : "0 0 6px rgba(129,140,248,0.6)",
+                ? "0 0 8px rgba(16,185,129,0.7)"
+                : "0 0 6px rgba(249,115,22,0.6)",
             }}
           />
         </motion.div>
@@ -201,7 +200,7 @@ function AnimatedShield() {
           className="absolute inset-0"
           style={{
             filter: "blur(24px)",
-            background: "rgba(37,99,235,0.28)",
+            background: "rgba(16,185,129,0.28)",
             borderRadius: "50%",
             transform: "scale(0.9) translateY(10px)",
           }}
@@ -216,9 +215,9 @@ function AnimatedShield() {
         >
           <defs>
             <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="110%">
-              <stop offset="0%" stopColor="#60A5FA" />
-              <stop offset="45%" stopColor="#2563EB" />
-              <stop offset="100%" stopColor="#1E40AF" />
+              <stop offset="0%" stopColor="#34D399" />
+              <stop offset="45%" stopColor="#10B981" />
+              <stop offset="100%" stopColor="#047857" />
             </linearGradient>
             <linearGradient id="sg2" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="rgba(255,255,255,0.45)" />
@@ -273,9 +272,9 @@ function AnimatedShield() {
             strokeLinecap="round"
             fill="none"
           />
-          {/* Keyhole circle */}
-          <circle cx="50" cy="63" r="4" fill="rgba(37,99,235,0.85)" />
-          <rect x="48.5" y="65" width="3" height="5.5" rx="1.2" fill="rgba(37,99,235,0.85)" />
+          {/* Keyhole */}
+          <circle cx="50" cy="63" r="4" fill="rgba(16,185,129,0.85)" />
+          <rect x="48.5" y="65" width="3" height="5.5" rx="1.2" fill="rgba(16,185,129,0.85)" />
         </svg>
 
         {/* Light sweep overlay */}
@@ -384,7 +383,7 @@ function LoginFormCard({
     >
       {/* Card header */}
       <div className="px-6 py-4 border-b border-[#E4ECF8] flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+        <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
           <Shield className="w-4 h-4 text-white" />
         </div>
         <span className="text-sm font-bold text-slate-800">Administrator Login</span>
@@ -420,7 +419,7 @@ function LoginFormCard({
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter administrator username"
               autoComplete="username"
-              className="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-[14px] text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 focus:bg-white transition-all shadow-xs"
+              className="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-[14px] text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 focus:bg-white transition-all shadow-xs"
             />
           </div>
         </div>
@@ -439,7 +438,7 @@ function LoginFormCard({
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               autoComplete="current-password"
-              className="w-full pl-10 pr-11 py-3 bg-slate-50/80 border border-slate-200 rounded-[14px] text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 focus:bg-white transition-all shadow-xs"
+              className="w-full pl-10 pr-11 py-3 bg-slate-50/80 border border-slate-200 rounded-[14px] text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 focus:bg-white transition-all shadow-xs"
             />
             <button
               type="button"
@@ -458,7 +457,7 @@ function LoginFormCard({
               type="checkbox"
               checked={rememberDevice}
               onChange={(e) => setRememberDevice(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              className="w-4 h-4 rounded border-slate-300 text-slate-800 focus:ring-emerald-500"
             />
             <span className="text-xs font-medium text-slate-600 group-hover:text-slate-800 transition-colors">
               Remember this device
@@ -466,7 +465,7 @@ function LoginFormCard({
           </label>
           <button
             type="button"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-xs font-semibold text-slate-800 hover:text-emerald-700 transition-colors"
           >
             Forgot password?
           </button>
@@ -476,11 +475,11 @@ function LoginFormCard({
         <motion.button
           type="submit"
           disabled={isLoading}
-          whileHover={{ y: -2, boxShadow: "0 12px 28px rgba(37,99,235,0.32)" }}
+          whileHover={{ y: -2, boxShadow: "0 12px 28px rgba(16,185,129,0.32)" }}
           whileTap={{ scale: 0.98 }}
           className="relative w-full flex items-center justify-center gap-2.5 py-3.5 rounded-[14px] text-white font-bold text-sm shadow-md transition-all disabled:opacity-70 overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #2563EB 0%, #4338CA 50%, #2563EB 100%)",
+            background: "linear-gradient(135deg, #10B981 0%, #F97316 50%, #10B981 100%)",
             backgroundSize: "200% 200%",
           }}
         >
@@ -778,32 +777,9 @@ export default function AdminLoginPage() {
 
       <div className="relative z-10 min-h-screen flex flex-col">
 
-        {/* ── Top Nav Strip ── */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="border-b border-[#E4ECF8] bg-white/85 backdrop-blur-md sticky top-0 z-30"
-        >
-          <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-sm text-slate-900 font-space">JanSuvidha</span>
-              <div className="h-4 w-px bg-slate-200" />
-              <span className="text-xs text-slate-500 font-medium">Secure Administration Portal</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold">System Secure</span>
-            </div>
-          </div>
-        </motion.div>
-
         {/* ── Main Grid ── */}
-        <div className="flex-grow max-w-[1600px] mx-auto w-full px-6 lg:px-12 py-10 lg:py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+        <div className="flex-grow max-w-[1600px] mx-auto w-full px-6 lg:px-12 py-10 lg:py-14 flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center w-full">
 
             {/* ─────────── LEFT PANEL (7 cols) ─────────── */}
             <div className="lg:col-span-7 space-y-7">
@@ -844,6 +820,10 @@ export default function AdminLoginPage() {
               {/* Restricted Resources */}
               <RestrictedResourcesCard />
 
+            </div>
+
+            {/* ─────────── RIGHT PANEL (5 cols, sticky) ─────────── */}
+            <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
               {/* Login Form */}
               <LoginFormCard
                 username={username} setUsername={setUsername}
@@ -854,13 +834,6 @@ export default function AdminLoginPage() {
                 isLoading={isLoading}
                 onSubmit={handleLogin}
               />
-            </div>
-
-            {/* ─────────── RIGHT PANEL (5 cols, sticky) ─────────── */}
-            <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
-              <SecurityOverviewCard />
-              <RequiredAccessCard />
-              <ProtectedByCard />
             </div>
           </div>
         </div>

@@ -11,15 +11,17 @@ export interface LocationData {
 }
 
 interface GeotagMapPreviewProps {
-  location: LocationData;
+  location: LocationData | null;
   onLocationDetect: () => void;
   isLocating: boolean;
+  error?: string;
 }
 
 export default function GeotagMapPreview({
   location,
   onLocationDetect,
   isLocating,
+  error,
 }: GeotagMapPreviewProps) {
   return (
     <div className="space-y-3">
@@ -45,8 +47,15 @@ export default function GeotagMapPreview({
         </button>
       </div>
 
+      {error && (
+        <p className="text-xs font-medium text-rose-600 flex items-center gap-1.5 pb-1">
+          <span className="w-3.5 h-3.5 flex items-center justify-center rounded-full bg-rose-100 text-rose-600 font-bold">!</span>
+          {error}
+        </p>
+      )}
+
       {/* Bright Geotag Card Container */}
-      <div className="relative rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+      <div className={`relative rounded-2xl border bg-white overflow-hidden shadow-sm transition-all ${error ? "border-rose-400 ring-2 ring-rose-100" : "border-slate-200"}`}>
         {/* Placeholder Map Preview Canvas matching Landing Page Colors */}
         <div className="relative h-44 w-full bg-gradient-to-br from-blue-100/90 via-indigo-50 to-blue-50 overflow-hidden flex items-center justify-center">
           {/* SVG Map Grid Background Pattern */}
@@ -89,26 +98,40 @@ export default function GeotagMapPreview({
             <Compass className="w-4 h-4 text-blue-600" />
           </div>
 
-          {/* Location Status Pill top left */}
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full border border-slate-200 text-xs font-semibold text-slate-800 shadow-xs">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                location.isAutoDetected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
-              }`}
-            />
-            {location.isAutoDetected ? "GPS Location Verified" : "Default Geotag Assigned"}
-          </div>
-
-          {/* Animated Center Pin Marker */}
-          <div className="relative z-10 flex flex-col items-center">
-            {/* Pulsing radar ring */}
-            <div className="absolute -inset-4 rounded-full bg-blue-500/25 animate-ping" />
-            <div className="absolute -inset-8 rounded-full bg-indigo-500/15 animate-pulse" />
-
-            <div className="relative p-3 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full shadow-lg border-2 border-white">
-              <MapPin className="w-6 h-6 stroke-[2.5]" />
+          {!location ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-sm z-20">
+              <div className="p-3 bg-white rounded-full shadow-md text-blue-600 mb-3 border border-slate-100">
+                <Navigation className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-bold text-slate-800">Location Required</p>
+              <p className="text-xs text-slate-600 mt-1 max-w-[250px] text-center">
+                Click the button above to allow GPS access and pinpoint the incident location.
+              </p>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* Location Status Pill top left */}
+              <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full border border-slate-200 text-xs font-semibold text-slate-800 shadow-xs z-30">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    location.isAutoDetected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+                  }`}
+                />
+                {location.isAutoDetected ? "GPS Location Verified" : "Default Geotag Assigned"}
+              </div>
+
+              {/* Animated Center Pin Marker */}
+              <div className="relative z-10 flex flex-col items-center">
+                {/* Pulsing radar ring */}
+                <div className="absolute -inset-4 rounded-full bg-blue-500/25 animate-ping" />
+                <div className="absolute -inset-8 rounded-full bg-indigo-500/15 animate-pulse" />
+
+                <div className="relative p-3 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full shadow-lg border-2 border-white">
+                  <MapPin className="w-6 h-6 stroke-[2.5]" />
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Location Info Footer Bar */}
@@ -118,12 +141,20 @@ export default function GeotagMapPreview({
               <MapPin className="w-4 h-4" />
             </div>
             <div className="truncate">
-              <p className="font-bold text-slate-900 truncate">
-                {location.address}
-              </p>
-              <p className="text-[11px] font-mono text-slate-500">
-                Lat: {location.lat.toFixed(4)}° N, Lng: {location.lng.toFixed(4)}° E
-              </p>
+              {location ? (
+                <>
+                  <p className="font-bold text-slate-900 truncate">
+                    {location.address}
+                  </p>
+                  <p className="text-[11px] font-mono text-slate-500">
+                    Lat: {location.lat.toFixed(4)}° N, Lng: {location.lng.toFixed(4)}° E
+                  </p>
+                </>
+              ) : (
+                <p className="font-bold text-slate-500 truncate mt-1">
+                  Location pending detection...
+                </p>
+              )}
             </div>
           </div>
 
