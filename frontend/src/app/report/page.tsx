@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ReportPage() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-blue-50/60 via-indigo-50/30 to-white min-h-screen pt-8 pb-20">
+    <div className="relative overflow-hidden landing-page-grid min-h-screen pt-8 pb-20">
       {/* Decorative backdrop glows matching Landing Page Hero */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />

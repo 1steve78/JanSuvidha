@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Sparkles, ShieldCheck, Cpu, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  Cpu,
+  Loader2,
+  CheckCircle2,
+  Lock,
+  Globe
+} from "lucide-react";
 import StepProgressBar from "./StepProgressBar";
 import IncomeStep from "./IncomeStep";
 import OccupationStep from "./OccupationStep";
@@ -45,6 +54,7 @@ const DEFAULT_FORM: FormData = {
 export default function MultiStepForm() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [slideDirection, setSlideDirection] = useState<"forward" | "backward">("forward");
   const [formData, setFormData] = useState<FormData>(DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setResults = useMatchStore((state) => state.setResults);
@@ -54,17 +64,32 @@ export default function MultiStepForm() {
   };
 
   const handleNext = () => {
-    if (currentStep < 3) setCurrentStep((s) => (s + 1) as 1 | 2 | 3);
+    if (currentStep < 3) {
+      setSlideDirection("forward");
+      setCurrentStep((s) => (s + 1) as 1 | 2 | 3);
+    }
   };
 
   const handleBack = () => {
-    if (currentStep > 1) setCurrentStep((s) => (s - 1) as 1 | 2 | 3);
+    if (currentStep > 1) {
+      setSlideDirection("backward");
+      setCurrentStep((s) => (s - 1) as 1 | 2 | 3);
+    }
+  };
+
+  const handleStepClick = (step: number) => {
+    if (step < currentStep) {
+      setSlideDirection("backward");
+      setCurrentStep(step as 1 | 2 | 3);
+    } else if (step > currentStep) {
+      setSlideDirection("forward");
+      setCurrentStep(step as 1 | 2 | 3);
+    }
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Convert frontend form strings to backend numeric/bool expected values
       const incomeMap: Record<string, number> = {
         "< 1L": 50000,
         "1L-2.5L": 150000,
@@ -86,7 +111,7 @@ export default function MultiStepForm() {
         gender: formData.gender.toLowerCase(),
         category: formData.socialCategory,
         state: formData.state,
-        land_ownership: formData.landHolding !== "None",
+        land_ownership: formData.landHolding !== "None" && formData.landHolding !== "Landless",
         student_status: formData.occupation === "Student",
         family_size: parseInt(formData.familyCount.split("-")[0]) || 4,
       };
@@ -96,40 +121,60 @@ export default function MultiStepForm() {
       router.push("/match/results");
     } catch (error) {
       console.error(error);
-      alert("Failed to find schemes.");
+      alert("Failed to calculate scheme eligibility. Please check backend connection.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleStepClick = (step: number) => {
-    if (step < currentStep) setCurrentStep(step as 1 | 2 | 3);
-  };
-
   return (
-    <section className="min-h-screen bg-gradient-to-b from-blue-50/70 via-indigo-50/30 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Page Header */}
-        <div className="text-center mb-10 space-y-4">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-blue-200">
-            <Cpu className="w-3.5 h-3.5" />
-            AI/ML Scheme Eligibility Matcher
+    <section className="relative min-h-screen landing-page-grid py-10 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Decorative ambient backdrop glow matching Landing Page */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto space-y-8">
+        
+        {/* Page Header matching Hero & Landing Page style */}
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          {/* Top pill badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-semibold tracking-wide border border-blue-200/60 landing-shadow-sm">
+            <Cpu className="w-3.5 h-3.5 text-blue-600" />
+            <span>AI-Powered Scheme Eligibility Matcher</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
-            Find Your Government{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Scheme Eligibility
+
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">
+            Discover Government Schemes You’re{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-800 bg-clip-text text-transparent">
+              Qualified For.
             </span>
           </h1>
-          <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-            Answer 3 quick steps. Our AI cross-references 500+ welfare schemes to give you a ranked eligibility report in seconds.
+
+          <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed">
+            Answer 3 quick steps. Our AI cross-references 500+ Central and State welfare programs to generate a ranked eligibility report in seconds.
           </p>
         </div>
 
-        {/* Main Card */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          {/* Gradient Accent Bar */}
-          <div className="h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600" />
+        {/* 3-Step Visual Process Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-medium text-slate-600 bg-white/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 1 ? "bg-blue-50 text-blue-900 border border-blue-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+            <span>Enter Income & Assets</span>
+          </div>
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 2 ? "bg-indigo-50 text-indigo-900 border border-indigo-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">2</span>
+            <span>State & Occupation</span>
+          </div>
+          <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all ${currentStep === 3 ? "bg-purple-50 text-purple-900 border border-purple-200 font-bold shadow-2xs" : "bg-slate-50 text-slate-700"}`}>
+            <span className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs">3</span>
+            <span>Demographics & Match</span>
+          </div>
+        </div>
+
+        {/* Main Glassmorphic Card Container */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 landing-shadow-xl overflow-hidden">
+          {/* Gradient Top Accent Bar */}
+          <div className="h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
 
           <div className="p-6 sm:p-10">
             <StepProgressBar
@@ -137,20 +182,26 @@ export default function MultiStepForm() {
               onStepClick={handleStepClick}
             />
 
-            <div className="mt-2">
-              {currentStep === 1 && (
-                <IncomeStep formData={formData} updateForm={updateForm} />
-              )}
-              {currentStep === 2 && (
-                <OccupationStep formData={formData} updateForm={updateForm} />
-              )}
-              {currentStep === 3 && (
-                <DemographicsStep formData={formData} updateForm={updateForm} />
-              )}
+            {/* Sliding Animated Step Container */}
+            <div className="relative overflow-hidden mt-6 min-h-[380px]">
+              <div
+                key={currentStep}
+                className={slideDirection === "forward" ? "step-slide-right" : "step-slide-left"}
+              >
+                {currentStep === 1 && (
+                  <IncomeStep formData={formData} updateForm={updateForm} />
+                )}
+                {currentStep === 2 && (
+                  <OccupationStep formData={formData} updateForm={updateForm} />
+                )}
+                {currentStep === 3 && (
+                  <DemographicsStep formData={formData} updateForm={updateForm} />
+                )}
+              </div>
             </div>
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+            {/* Navigation Bar */}
+            <div className="flex items-center justify-between mt-10 pt-6 border-t border-slate-100">
               <button
                 type="button"
                 onClick={handleBack}
@@ -165,9 +216,9 @@ export default function MultiStepForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:scale-105 transition-all duration-200"
+                  className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white landing-shadow-md hover:scale-[1.02] transition-all duration-200"
                 >
-                  Continue
+                  <span>Continue to Step {currentStep + 1}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               ) : (
@@ -175,36 +226,36 @@ export default function MultiStepForm() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:hover:scale-100"
+                  className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl text-sm font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white landing-shadow-lg hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
                   )}
-                  {isSubmitting ? "Matching..." : "Find Eligible Schemes"}
-                  {!isSubmitting && <Sparkles className="w-4 h-4 text-amber-300" />}
+                  <span>{isSubmitting ? "Calculating Matches..." : "Find Eligible Schemes"}</span>
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Trust Badges */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>No data stored on servers</span>
+        {/* Trust Badges Footer matching Landing Page */}
+        <div className="flex flex-wrap items-center justify-center gap-8 text-xs font-medium text-slate-600 pt-2">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>100% Free & Confidential</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>CERT-IN compliant encryption</span>
+          <div className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>No Aadhaar or Personal Storage</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>Official government sources only</span>
+          <div className="flex items-center gap-2">
+            <Globe className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>Official Government Scheme Databases</span>
           </div>
         </div>
+
       </div>
     </section>
   );
