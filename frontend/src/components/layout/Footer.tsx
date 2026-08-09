@@ -34,7 +34,7 @@ export default function Footer() {
           {/* Left Side: Headline & Subscribe */}
           <div className="max-w-md w-full">
             <h2 className="text-4xl sm:text-5xl font-medium tracking-tight text-slate-900 leading-[1.1] mb-8">
-              Stay in the loop with<br />our latest updates
+              Join the movement for<br />transparent governance
             </h2>
             
             <form 
@@ -43,7 +43,7 @@ export default function Footer() {
             >
               <input 
                 type="email" 
-                placeholder="Subscribe" 
+                placeholder="Stay updated on local civic actions" 
                 className="bg-transparent outline-none w-full text-sm placeholder-slate-500 text-slate-900" 
                 required
               />
@@ -67,43 +67,50 @@ export default function Footer() {
           
           {/* Column 1: Headquarters */}
           <div>
-            <div className="mb-1 text-slate-900">New Delhi</div>
-            <div className="text-slate-600 mb-2">T: (+91) 11 2345 6789</div>
+            <div className="mb-1 text-slate-900 font-bold">Central Nodal Office</div>
+            <div className="text-slate-600 mb-2">Helpdesk: (+91) 11 2345 6789</div>
             <div className="text-slate-600 leading-relaxed">
-              12 Sansad Marg,<br />
+              Civic Centre, Sansad Marg,<br />
               New Delhi 110001, India
             </div>
           </div>
 
           {/* Column 2: Regional Office */}
           <div>
-            <div className="mb-1 text-slate-900">Mumbai</div>
-            <div className="text-slate-600 mb-2">T: (+91) 22 9876 5432</div>
+            <div className="mb-1 text-slate-900 font-bold">State Grievance Cell</div>
+            <div className="text-slate-600 mb-2">Hotline: 1800-11-2233</div>
             <div className="text-slate-600 leading-relaxed">
-              45 Nariman Point,<br />
+              Anti-Corruption Bureau HQ,<br />
               Mumbai 400021, India
             </div>
           </div>
 
           {/* Column 3: Quick Links */}
           <div className="flex flex-col gap-2 text-slate-600">
-            <Link href="/match" className="hover:text-slate-900 transition-colors">Find Schemes</Link>
-            <Link href="/report" className="hover:text-slate-900 transition-colors">Report Issue</Link>
-            <Link href="/track" className="hover:text-slate-900 transition-colors">Track Status</Link>
+            <div className="text-slate-900 font-bold mb-1">Services</div>
+            <Link href="/report" className="hover:text-slate-900 transition-colors">File Anonymous Grievance</Link>
+            <Link href="/match" className="hover:text-slate-900 transition-colors">AI Scheme Finder</Link>
+            <Link href="/track" className="hover:text-slate-900 transition-colors">Track Complaint Status</Link>
+            <Link href="/dashboard" className="hover:text-slate-900 transition-colors">Public Telemetry Map</Link>
           </div>
 
-          {/* Column 4: Socials */}
+          {/* Column 4: Resources */}
           <div className="flex flex-col gap-2 text-slate-600">
-            <a href="#" className="hover:text-slate-900 transition-colors">Instagram</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Twitter (X)</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">YouTube</a>
+            <div className="text-slate-900 font-bold mb-1">Information</div>
+            <Link href="#security" className="hover:text-slate-900 transition-colors">Data Security & Anonymity</Link>
+            <Link href="#faq" className="hover:text-slate-900 transition-colors">Frequently Asked Questions</Link>
+            <Link href="#guidelines" className="hover:text-slate-900 transition-colors">Reporting Guidelines</Link>
+            <Link href="/admin/login" className="hover:text-slate-900 transition-colors">Administrator Portal</Link>
           </div>
         </div>
 
         {/* Bottom copyright line */}
         <div className="pt-6 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-[11px] text-slate-500 font-medium tracking-wide">
-          <div>All Rights Reserved - Copyright © 2026 JanSuvidha</div>
-          <Link href="#privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link>
+          <div>All Rights Reserved - Copyright © 2026 JanSuvidha (Government of India Initiative)</div>
+          <div className="flex gap-4">
+            <Link href="#privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link>
+            <Link href="#terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>
