@@ -42,7 +42,7 @@ export default function Header() {
             Public Map
           </Link>
           <Link
-            href="/admin/login"
+            href="/admin/dashboard"
             className="bg-[#0f172a] hover:bg-black text-white font-medium text-[15px] px-6 py-2.5 rounded-full shadow-sm hover:shadow transition-all"
           >
             Admin Portal
